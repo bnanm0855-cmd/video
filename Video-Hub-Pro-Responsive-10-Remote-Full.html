@@ -1,0 +1,1317 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="aurora">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07091a">
+<title>Video Hub Pro — المكتبة الموحدة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js">initNavReorder();
+</script>
+<style>
+:root{
+ --bg:#07091a;--bg2:#10102b;--surface:rgba(20,25,55,.72);--surface2:rgba(10,15,34,.84);
+ --line:rgba(255,255,255,.11);--text:#f8fbff;--muted:#9ca9c5;
+ --p:#7c5cff;--p2:#18c8ff;--p3:#00e6a7;--pink:#ff3cac;--gold:#ffd166;--danger:#ff5577;
+ --shadow:0 24px 80px rgba(0,0,0,.38);--radius:20px;
+}
+html[data-theme="ocean"]{--bg:#061d2b;--bg2:#0b5870;--bg3:#08283c;--p:#00b7ff;--p2:#00e6d8;--p3:#6dffbd;--pink:#55d8ff}
+html[data-theme="sunset"]{--bg:#3a1022;--bg2:#8a3f16;--bg3:#45172e;--p:#ff4d8d;--p2:#ff9d2e;--p3:#ffe066;--pink:#ff6b6b}
+html[data-theme="emerald"]{--bg:#062a22;--bg2:#0a614b;--bg3:#07372e;--p:#00e09a;--p2:#22d3ee;--p3:#c6ff68;--pink:#ff76cf}
+html[data-theme="neon"]{--bg:#17052d;--bg2:#3b1261;--bg3:#21083f;--p:#b24cff;--p2:#00e5ff;--p3:#00ff88;--pink:#ff00aa}
+html[data-theme="midnight"]{--bg:#101735;--bg2:#273b73;--bg3:#151f43;--p:#7c83ff;--p2:#38bdf8;--p3:#34d399;--pink:#f43f5e}
+html[data-theme="lavender"]{--bg:#30234f;--bg2:#7555a8;--bg3:#403064;--p:#c084fc;--p2:#67e8f9;--p3:#a7f3d0;--pink:#f0abfc}
+html[data-theme="coral"]{--bg:#3f1d24;--bg2:#a34a42;--bg3:#51252b;--p:#ff6b6b;--p2:#ffd166;--p3:#7ee7c1;--pink:#ff9f68}
+html[data-theme="sky"]{--bg:#0b3554;--bg2:#2d78a5;--bg3:#164a6d;--p:#38bdf8;--p2:#a7f3d0;--p3:#fde68a;--pink:#c4b5fd}
+html[data-theme="mint"]{--bg:#123b36;--bg2:#3c8775;--bg3:#1d5048;--p:#34d399;--p2:#67e8f9;--p3:#fef08a;--pink:#f9a8d4}
+html[data-theme="rose"]{--bg:#451b35;--bg2:#9b416f;--bg3:#5a2345;--p:#fb7185;--p2:#f9a8d4;--p3:#fde68a;--pink:#c4b5fd}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:
+ radial-gradient(circle at 85% 0%,color-mix(in srgb,var(--p) 24%,transparent),transparent 30%),
+ radial-gradient(circle at 10% 20%,color-mix(in srgb,var(--p2) 14%,transparent),transparent 28%),
+ linear-gradient(145deg,var(--bg),var(--bg2) 58%,var(--bg3));color:var(--text);font-family:Cairo,system-ui,sans-serif}
+body{overflow-x:hidden}
+button,input,select{font:inherit}button{border:0;cursor:pointer;color:inherit}
+button:disabled{opacity:.45;cursor:not-allowed}
+.app{min-height:100vh}.sidebar{display:none!important;position:fixed;inset:0 auto 0 0;width:258px;padding:18px 14px;z-index:80;
+ background:linear-gradient(180deg,rgba(7,12,29,.9),rgba(5,9,20,.78));border-right:1px solid var(--line);
+ backdrop-filter:blur(28px);overflow:auto;transition:.3s}
+.brand{display:flex;gap:11px;align-items:center;padding:7px 8px 20px;border-bottom:1px solid var(--line);margin-bottom:15px}
+.logo{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--p),var(--p2),var(--p3));box-shadow:0 14px 38px color-mix(in srgb,var(--p) 35%,transparent);font-size:22px}
+.brand b{font-size:17px}.brand small{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+.nav-title{font-size:10px;color:#73819b;font-weight:800;padding:4px 10px 7px}.nav{display:grid;gap:6px}
+.nav button{width:100%;min-height:46px;text-align:right;padding:9px 12px;border-radius:14px;background:transparent;color:#aab4c7;display:flex;align-items:center;gap:11px;transition:.2s}
+.nav button i{width:22px;text-align:center}.nav button:hover{background:rgba(255,255,255,.055);color:#fff;transform:translateX(2px)}
+.nav button.active{background:linear-gradient(100deg,color-mix(in srgb,var(--p) 28%,transparent),color-mix(in srgb,var(--p2) 10%,transparent));color:#fff;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--p) 28%,transparent)}
+.side-box{margin-top:18px;padding:13px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.035)}
+.progress{height:6px;background:#18213a;border-radius:99px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--p),var(--p2),var(--p3))}
+
+/* Enhanced visual system */
+html{color-scheme:dark}body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(circle at 18% 78%,color-mix(in srgb,var(--pink) 9%,transparent),transparent 26%),radial-gradient(circle at 78% 24%,color-mix(in srgb,var(--p3) 8%,transparent),transparent 24%)}
+.top{background:color-mix(in srgb,var(--bg) 70%,transparent);border-bottom-color:color-mix(in srgb,var(--p2) 18%,var(--line))}
+.panel,.hero,.stat,.quick,.folder-card,.media-card,.top,.sheet,.modalbox{background:linear-gradient(145deg,color-mix(in srgb,var(--surface) 82%,var(--p) 18%),color-mix(in srgb,var(--surface2) 84%,var(--p2) 16%));}
+.panel:hover{border-color:color-mix(in srgb,var(--p2) 28%,var(--line))}
+.bottom{background:linear-gradient(120deg,color-mix(in srgb,var(--bg2) 74%,transparent),color-mix(in srgb,var(--p) 12%,transparent),color-mix(in srgb,var(--bg3) 78%,transparent))!important;border-color:color-mix(in srgb,var(--p2) 28%,var(--line))!important;box-shadow:0 18px 60px rgba(0,0,0,.35),0 0 35px color-mix(in srgb,var(--p) 10%,transparent)!important;backdrop-filter:blur(24px)}
+.bottom button{position:relative;min-width:82px;border:1px solid transparent!important;background:transparent!important;border-radius:15px!important;color:#aebbd0!important;transition:.2s transform,.2s background,.2s color,.2s box-shadow;overflow:hidden}
+.bottom button:before{content:"";position:absolute;inset:3px;border-radius:12px;background:linear-gradient(135deg,color-mix(in srgb,var(--p) 0%,transparent),color-mix(in srgb,var(--p2) 0%,transparent));opacity:0;transition:.2s}
+.bottom button:hover{transform:translateY(-2px);color:#fff!important}
+.bottom button.active{color:#fff!important;background:linear-gradient(135deg,color-mix(in srgb,var(--p) 32%,transparent),color-mix(in srgb,var(--p2) 20%,transparent))!important;border-color:color-mix(in srgb,var(--p2) 30%,transparent)!important;box-shadow:0 8px 25px color-mix(in srgb,var(--p) 18%,transparent),inset 0 1px 0 #fff2}
+.bottom button.active:before{opacity:1}
+.bottom button i,.bottom button span{position:relative;z-index:1}.bottom .dragging{transform:scale(1.08) translateY(-5px)!important;z-index:10;box-shadow:0 14px 35px color-mix(in srgb,var(--p) 28%,transparent)!important;border-color:var(--p2)!important}
+.import-export-card{display:grid;grid-template-columns:1.25fr .75fr;gap:14px}.backup-feature{padding:20px;border-radius:20px;border:1px solid color-mix(in srgb,var(--p2) 22%,var(--line));background:linear-gradient(135deg,color-mix(in srgb,var(--p) 14%,transparent),color-mix(in srgb,var(--p2) 8%,transparent));position:relative;overflow:hidden}.backup-feature:after{content:"";position:absolute;width:170px;height:170px;border-radius:50%;left:-70px;bottom:-90px;background:linear-gradient(135deg,var(--p),var(--p2));opacity:.12}.backup-feature h3{margin:0 0 6px}.backup-feature p{color:var(--muted);line-height:1.8;margin:0 0 14px;font-size:12px}.backup-actions{display:flex;gap:8px;flex-wrap:wrap}.backup-meta{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.backup-stat{padding:15px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.035)}.backup-stat b{display:block;font-size:20px;margin-top:5px}.backup-stat small{color:var(--muted)}
+@media(max-width:700px){.import-export-card{grid-template-columns:1fr}.backup-meta{grid-template-columns:repeat(2,1fr)}}
+
+/* Visual refresh: colorful, layered, Media Hub Pro style */
+:root{--bg3:#15152d}
+.panel,.hero,.stat,.quick,.folder-card,.media-card,.top,.sheet,.modalbox{
+ background:linear-gradient(145deg,color-mix(in srgb,var(--surface) 92%,var(--p) 8%),color-mix(in srgb,var(--surface2) 88%,var(--p2) 12%));
+ border-color:color-mix(in srgb,var(--p2) 18%,var(--line));
+ box-shadow:0 18px 55px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.05);
+}
+.stat:nth-child(1){border-top:3px solid var(--p)} .stat:nth-child(2){border-top:3px solid var(--p2)}
+.stat:nth-child(3){border-top:3px solid var(--p3)} .stat:nth-child(4){border-top:3px solid var(--pink)}
+.btn.primary{background:linear-gradient(135deg,var(--p),var(--p2));box-shadow:0 10px 28px color-mix(in srgb,var(--p) 25%,transparent)}
+.input{background:color-mix(in srgb,var(--bg3) 72%,transparent);border-color:color-mix(in srgb,var(--p2) 20%,#33425a)}
+
+.main{margin:0;width:100%;padding-bottom:92px}.top{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:10px;padding:13px 24px;background:rgba(5,8,18,.62);border-bottom:1px solid var(--line);backdrop-filter:blur(25px)}
+.search{position:relative;flex:1;max-width:760px}.search i{position:absolute;right:14px;top:12px;color:var(--muted)}.input{width:100%;background:rgba(5,10,20,.6);border:1px solid #33425a;color:#fff;padding:11px 13px;border-radius:13px;outline:0}.search .input{padding-right:42px}.input:focus{border-color:var(--p2);box-shadow:0 0 0 3px color-mix(in srgb,var(--p) 14%,transparent)}
+.top-actions{margin-right:auto;display:flex;gap:7px}.icon-btn,.btn{background:rgba(24,35,57,.72);border:1px solid var(--line);border-radius:13px;padding:10px 13px;transition:.18s}.icon-btn{width:43px;height:43px;padding:0}.btn:hover,.icon-btn:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.23)}.primary{background:linear-gradient(135deg,var(--p),#3c83ff,var(--p2));border:0;font-weight:800;box-shadow:0 10px 28px color-mix(in srgb,var(--p) 25%,transparent)}.danger{background:rgba(110,20,43,.42);color:#ffb0bd}.success{background:rgba(0,100,70,.38);color:#8affca}
+.content{max-width:1500px;margin:auto;padding:27px 26px}.view{display:none;animation:in .24s ease}.view.active{display:block}@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hero{padding:5px 0 23px}.hero h1{font-size:clamp(27px,4vw,39px);margin:0 0 6px;letter-spacing:-.6px}.hero p{margin:0;color:var(--muted);line-height:1.9}
+.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:20px}.stat{position:relative;overflow:hidden;padding:16px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,rgba(28,38,67,.7),rgba(9,15,29,.65));box-shadow:var(--shadow)}
+.stat:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;left:-35px;bottom:-40px;background:linear-gradient(135deg,var(--p),transparent);opacity:.12}.stat .ico{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--p) 15%,transparent);color:var(--p2);margin-bottom:9px}.stat small{color:var(--muted)}.stat b{font-size:25px;display:block;margin-top:2px}
+.quick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:24px}.quick button{text-align:right;padding:18px;min-height:126px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(145deg,rgba(27,37,66,.66),rgba(10,16,31,.62));box-shadow:var(--shadow);transition:.2s}.quick button:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--p2) 35%,transparent)}.quick i{font-size:25px;margin-bottom:13px;color:var(--p2)}.quick b{display:block;font-size:15px}.quick small{display:block;color:var(--muted);margin-top:4px;line-height:1.6}
+.panel{padding:19px;border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(145deg,rgba(24,34,60,.7),rgba(8,14,28,.67));box-shadow:var(--shadow);margin-bottom:16px}.panel h2,.panel h3{margin:0 0 13px}.toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px}.toolbar .spacer{flex:1}
+.tabs{display:flex;gap:7px;overflow:auto;margin-bottom:16px}.tab{white-space:nowrap;padding:9px 13px;border-radius:11px;background:rgba(17,26,42,.75);color:#95a2b9;border:1px solid transparent}.tab.active{color:#fff;background:linear-gradient(135deg,color-mix(in srgb,var(--p) 48%,transparent),color-mix(in srgb,var(--p2) 18%,transparent));border-color:rgba(255,255,255,.1)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:14px}.media-card{min-width:0;overflow:hidden;border-radius:18px;border:1px solid var(--line);background:linear-gradient(145deg,rgba(25,36,61,.7),rgba(8,14,28,.67));box-shadow:var(--shadow);transition:.2s}.media-card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--p2) 32%,transparent)}
+.thumb{aspect-ratio:16/9;background:#03060c;position:relative;overflow:hidden}.thumb img,.thumb video{width:100%;height:100%;object-fit:cover;display:block}.thumb .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.04),transparent 48%,rgba(0,0,0,.58))}.play{position:absolute;bottom:9px;left:9px;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#111;z-index:4;box-shadow:0 8px 25px #0008}.badge{position:absolute;top:8px;right:8px;z-index:4;padding:4px 7px;border-radius:8px;background:#030711bb;border:1px solid #fff2;font-size:9px}.pick{position:absolute;top:8px;left:8px;z-index:5;background:#000b;padding:4px 6px;border-radius:8px}.pick input{width:16px;height:16px}.color-dot{position:absolute;bottom:9px;right:9px;width:11px;height:11px;border-radius:50%;border:2px solid #fff;z-index:4}.meta{padding:12px}.meta b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:clamp(13px,1.5vw,16px);line-height:1.5}.meta small{display:block;color:var(--muted);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:11px}.meta-actions .mini{width:100%;min-width:0;height:42px;padding:0;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:5px;background:linear-gradient(145deg,rgba(32,45,72,.9),rgba(15,24,43,.9));border:1px solid rgba(255,255,255,.10);color:#dbe4f3;font-size:12px;transition:.18s}.meta-actions .mini:hover{transform:translateY(-1px);border-color:color-mix(in srgb,var(--p2) 42%,var(--line));background:linear-gradient(145deg,rgba(43,59,94,.95),rgba(18,29,51,.95))}.meta-actions .mini i{font-size:14px;color:var(--p2)}.meta-actions .mini:nth-child(1) i{color:var(--gold)}.meta-actions .mini:nth-child(2) i{color:var(--p2)}.meta-actions .mini:nth-child(3) i{color:var(--p3)}.meta-actions .mini.danger{color:#ffb9c5;background:linear-gradient(145deg,rgba(100,28,49,.52),rgba(51,17,31,.55));border-color:rgba(255,88,120,.16)}.meta-actions .mini.danger i{color:#ff6d8e}.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:65px 15px;border:1px dashed #ffffff17;border-radius:18px}.empty i{font-size:34px;display:block;margin-bottom:10px;color:#66728a}
+.folder-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr));gap:14px}.folder{min-width:0;padding:16px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(145deg,rgba(28,40,68,.78),rgba(11,18,34,.72));transition:.2s;box-shadow:0 12px 30px rgba(0,0,0,.10)}.folder:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--p2) 28%,var(--line))}.folder-head{display:flex;align-items:center;gap:12px;min-width:0}.folder-head>div:first-child{display:flex;align-items:center;gap:12px;min-width:0;flex:1}.folder-icon{width:48px;height:48px;flex:0 0 48px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,color-mix(in srgb,var(--gold) 80%,white),var(--gold));color:#172033;font-size:22px;box-shadow:0 8px 20px color-mix(in srgb,var(--gold) 18%,transparent)}.folder b{display:block;margin:0;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.folder small{display:block;color:var(--muted);margin-top:4px}.folder-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px}.folder-actions .btn,.folder-actions .mini{min-width:0;width:100%;height:42px;padding:0;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px}.folder-actions .btn{background:linear-gradient(135deg,color-mix(in srgb,var(--p) 22%,rgba(24,35,57,.8)),rgba(24,35,57,.78));border:1px solid color-mix(in srgb,var(--p2) 20%,var(--line))}.folder-actions .danger{background:rgba(100,28,49,.42);border-color:rgba(255,88,120,.14)}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field label{display:block;color:#aeb9cb;font-size:12px;margin-bottom:6px}.formgrid .full{grid-column:1/-1}
+.setting-row{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:13px 0;border-bottom:1px solid #ffffff0b}.setting-row:last-child{border-bottom:0}.setting-row small{display:block;color:var(--muted);margin-top:3px}.switch{width:45px;height:25px;border-radius:99px;background:#26334e;position:relative;flex:none}.switch input{display:none}.switch span{position:absolute;width:19px;height:19px;border-radius:50%;background:#a8b3c7;top:3px;right:3px;transition:.2s}.switch input:checked+span{right:23px;background:var(--p3);box-shadow:0 0 12px var(--p3)}
+.theme-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}.theme{padding:11px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.035);text-align:center}.theme-dot{height:30px;border-radius:9px;margin-bottom:6px}.theme.active{border-color:var(--p2);box-shadow:0 0 0 1px color-mix(in srgb,var(--p2) 30%,transparent)}
+.pair-layout{display:grid;grid-template-columns:1.05fr .95fr;gap:15px}.pair-code{font-size:clamp(34px,5vw,54px);letter-spacing:clamp(5px,1.3vw,13px);text-align:center;font-weight:900;padding:23px 8px;border:1px dashed #7482ae;border-radius:19px;background:linear-gradient(145deg,color-mix(in srgb,var(--p) 14%,transparent),color-mix(in srgb,var(--p2) 7%,transparent));text-shadow:0 0 28px color-mix(in srgb,var(--p) 55%,transparent)}.status{padding:12px 14px;border-radius:13px;border:1px solid var(--line);background:rgba(9,15,28,.58);color:#b8c4d7;line-height:1.9}.ok{color:#7cf0bc}.device{padding:12px;border:1px solid var(--line);border-radius:13px;margin-top:8px;background:rgba(10,17,30,.5);display:flex;justify-content:space-between}.ok-dot{color:var(--p3)}
+.player-wrap{position:relative}.player{width:100%;max-height:67vh;background:#000;border-radius:16px;display:block}.resume{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:11px;background:#000c;border-radius:16px;text-align:center;padding:20px}.player-tools{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:11px}.speed{background:#172132;border:1px solid #2a3850;padding:9px;border-radius:10px;color:#fff}
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:14px;background:rgba(0,0,0,.73);z-index:200;backdrop-filter:blur(8px)}.modal.show{display:flex}.modalbox{width:min(900px,100%);max-height:94vh;overflow:auto;padding:18px;border-radius:24px;background:linear-gradient(145deg,rgba(18,28,49,.97),rgba(6,11,23,.97));border:1px solid #ffffff17;box-shadow:0 30px 100px #000}.modalhead{display:flex;align-items:center;gap:10px;margin-bottom:13px}.modalhead h2{margin:0;font-size:18px;flex:1}.close{background:rgba(26,36,53,.8);padding:9px 12px;border-radius:10px}.color-options{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.color-option{height:48px;border-radius:12px;border:2px solid transparent}.color-option.active{border-color:#fff;box-shadow:0 0 0 2px var(--p2)}
+.more-sheet{position:fixed;inset:0;display:none;align-items:flex-end;justify-content:center;background:#0009;z-index:190;backdrop-filter:blur(6px)}.more-sheet.show{display:flex}.sheet{width:min(500px,100%);padding:18px;border-radius:25px 25px 0 0;background:linear-gradient(145deg,rgba(20,30,52,.98),rgba(7,12,24,.98));border-top:1px solid var(--line)}.sheet button{width:100%;padding:13px;border-radius:12px;background:transparent;text-align:right;display:flex;gap:11px;align-items:center}.sheet button:hover{background:#ffffff09}
+.bottom{position:fixed;display:flex;align-items:center;gap:5px;left:50%;transform:translateX(-50%);bottom:12px;width:min(900px,calc(100vw - 24px));z-index:140;padding:6px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;background:linear-gradient(90deg,color-mix(in srgb,var(--bg2) 84%,transparent),color-mix(in srgb,var(--p) 10%,var(--bg2)),color-mix(in srgb,var(--bg2) 84%,transparent));border:1px solid color-mix(in srgb,var(--p2) 28%,var(--line));border-radius:18px;backdrop-filter:blur(26px) saturate(170%);box-shadow:0 16px 45px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.08);}
+.bottom::-webkit-scrollbar{display:none}
+.bottom button{order:0;flex:0 0 auto;min-width:82px;padding:7px 11px;border-radius:13px;background:transparent;color:color-mix(in srgb,var(--text) 58%,var(--bg2));font-size:10px;line-height:1.15;white-space:nowrap;transition:.18s;touch-action:none;user-select:none;position:relative}
+.bottom button i{display:block;font-size:16px;margin-bottom:3px;color:var(--p2);transition:.18s}
+.bottom button:nth-child(2n) i{color:var(--p)} .bottom button:nth-child(3n) i{color:var(--p3)} .bottom button:nth-child(4n) i{color:var(--pink)}
+.bottom button.active{color:#fff;background:linear-gradient(135deg,color-mix(in srgb,var(--p) 48%,transparent),color-mix(in srgb,var(--p2) 28%,transparent));box-shadow:0 8px 20px color-mix(in srgb,var(--p) 20%,transparent),inset 0 0 0 1px color-mix(in srgb,var(--p2) 30%,transparent)}
+.bottom button.active i{color:#fff}.bottom button:hover{color:#fff;background:color-mix(in srgb,var(--p) 10%,transparent)}
+.bottom button.dragging{opacity:.45;transform:scale(.96)}
+.bottom::after{content:'اسحب الأقسام لترتيبها';position:sticky;right:0;flex:0 0 auto;display:none}
+/* Storage center */
+.storage-hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(260px,.7fr);gap:16px;margin-bottom:16px}
+.storage-card{position:relative;overflow:hidden;padding:22px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(135deg,color-mix(in srgb,var(--p) 15%,var(--bg3)),color-mix(in srgb,var(--p2) 8%,var(--bg3)));box-shadow:var(--shadow)}
+.storage-card:before{content:"";position:absolute;width:190px;height:190px;border-radius:50%;left:-80px;bottom:-100px;background:linear-gradient(135deg,var(--p),var(--p2));opacity:.16;filter:blur(2px)}
+.storage-title{display:flex;align-items:center;gap:11px;position:relative}.storage-title .storage-icon{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:20px;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;box-shadow:0 10px 25px color-mix(in srgb,var(--p) 25%,transparent)}
+.storage-big{font-size:clamp(25px,4vw,38px);font-weight:900;margin:16px 0 4px;position:relative}.storage-sub{color:var(--muted);position:relative}
+.storage-limit{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:16px;position:relative}.storage-limit .input{min-width:0}.storage-limit select{min-width:110px}.storage-track{height:13px;border-radius:99px;background:color-mix(in srgb,var(--bg) 65%,#fff 5%);overflow:hidden;margin:18px 0 8px;border:1px solid #ffffff12;position:relative}.storage-fill{height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--p),var(--p2),var(--p3));box-shadow:0 0 18px color-mix(in srgb,var(--p2) 35%,transparent);transition:width .5s ease}.storage-percent{display:flex;justify-content:space-between;gap:10px;font-size:11px;color:var(--muted);position:relative}.storage-note{margin-top:12px;padding:11px 13px;border-radius:13px;background:color-mix(in srgb,var(--p) 7%,transparent);border:1px solid color-mix(in srgb,var(--p) 18%,transparent);color:var(--muted);font-size:12px}
+.storage-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.storage-table{display:grid;gap:8px}.storage-row{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;padding:12px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid #ffffff0a}.storage-row .row-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--p) 13%,transparent);color:var(--p2)}.storage-row b{display:block}.storage-row small{color:var(--muted)}
+.bottom{width:min(1040px,calc(100vw - 24px));padding:7px 8px;border-radius:20px;gap:4px;background:linear-gradient(100deg,color-mix(in srgb,var(--bg2) 92%,transparent),color-mix(in srgb,var(--p) 13%,var(--bg2)),color-mix(in srgb,var(--p2) 10%,var(--bg2)),color-mix(in srgb,var(--bg2) 92%,transparent));border-color:color-mix(in srgb,var(--p2) 34%,var(--line));box-shadow:0 18px 55px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.1)}
+.bottom button{min-width:88px;padding:8px 12px;border:1px solid transparent}.bottom button i{width:31px;height:31px;margin:0 auto 4px;border-radius:10px;display:grid;place-items:center;font-size:14px;background:rgba(255,255,255,.055)}.bottom button.active{transform:translateY(-2px);border-color:color-mix(in srgb,var(--p2) 28%,transparent);background:linear-gradient(135deg,color-mix(in srgb,var(--p) 45%,transparent),color-mix(in srgb,var(--p2) 25%,transparent))}.bottom button.active i{background:rgba(255,255,255,.13)}
+@media(max-width:700px){.storage-hero{grid-template-columns:1fr}.storage-breakdown{grid-template-columns:repeat(3,1fr)}.bottom{bottom:9px;width:calc(100vw - 14px);border-radius:18px}.bottom button{min-width:78px;font-size:9px;padding:7px 9px}}
+@media(max-width:430px){.storage-breakdown{grid-template-columns:1fr 1fr}.storage-breakdown .storage-mini:last-child{grid-column:1/-1}.bottom button{min-width:72px}.bottom button i{width:28px;height:28px}}
+.bulk{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:none;gap:7px;align-items:center;background:rgba(14,22,39,.95);border:1px solid #ffffff18;padding:10px 13px;border-radius:17px;z-index:100;box-shadow:0 20px 60px #0008;flex-wrap:wrap;justify-content:center;max-width:94vw}.bulk.show{display:flex}.toast{position:fixed;bottom:25px;right:25px;z-index:400;max-width:min(390px,90vw);padding:12px 15px;border-radius:13px;background:rgba(18,28,46,.96);border:1px solid #ffffff18;box-shadow:0 18px 55px #0009;opacity:0;transform:translateY(12px);pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:none}
+.safe-note{font-size:11px;color:var(--muted);line-height:1.8}.hidden{display:none!important}
+@media(max-width:1100px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.quick{grid-template-columns:repeat(2,minmax(0,1fr))}.pair-layout{grid-template-columns:1fr}}
+@media(max-width:900px){.top{padding:10px 12px}.top-actions .desktop{display:none}.content{padding:20px 13px 112px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.quick{grid-template-columns:repeat(2,minmax(0,1fr))}.pair-layout{grid-template-columns:1fr}.bulk{bottom:82px}.sidebar-toggle{display:none!important}}
+@media(min-width:901px){.sidebar-toggle{display:none!important}}
+@media(max-width:600px){.content{padding-left:9px;padding-right:9px}.hero h1{font-size:27px}.stats{gap:8px}.stat{padding:12px}.stat b{font-size:20px}.quick{grid-template-columns:1fr;gap:9px}.quick button{min-height:100px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.folder-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.meta{padding:8px}.meta-actions .mini{padding:6px}.formgrid{grid-template-columns:1fr}.theme-grid{grid-template-columns:repeat(2,1fr)}.color-options{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:360px){.grid,.folder-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.bottom{bottom:8px;width:calc(100vw - 14px);border-radius:16px}.bottom button{min-width:76px;font-size:9px}}
+
+.video-folder-area{margin:14px 0 18px;padding:16px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.025));box-shadow:0 10px 30px rgba(0,0,0,.08)}
+.video-folder-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.video-folder-head h3{margin:0 0 3px}.video-folder-head small{color:var(--muted)}
+.video-folder-browser{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:thin}.video-folder-item{min-width:128px;border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:16px;padding:12px;text-align:right;color:var(--text);cursor:pointer;transition:.2s;flex:0 0 auto}.video-folder-item:hover,.video-folder-item.active{transform:translateY(-2px);border-color:var(--p2);background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.04));box-shadow:0 8px 22px rgba(0,0,0,.12)}.video-folder-item .folder-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,var(--p2),var(--p3));color:white;font-size:19px;margin-bottom:9px}.video-folder-item b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.video-folder-item small{display:block;color:var(--muted);margin-top:3px}.video-folder-crumb{margin-top:8px;font-size:13px;color:var(--p2);font-weight:700}
+.folder-picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;max-height:50vh;overflow:auto;padding:3px}.folder-picker-item{border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:16px;padding:15px;color:var(--text);cursor:pointer;text-align:right}.folder-picker-item:hover{border-color:var(--p2);background:rgba(255,255,255,.09)}.folder-picker-item .folder-icon{font-size:25px;margin-bottom:8px;color:var(--p2)}
+@media(max-width:600px){.video-folder-area{padding:13px;border-radius:17px}.video-folder-item{min-width:118px}.video-folder-head{align-items:flex-start}.folder-picker-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ===== Ultra Responsive Layout Patch ===== */
+*,*::before,*::after{box-sizing:border-box}
+html{width:100%;min-width:0;overflow-x:hidden;scroll-behavior:smooth}
+body{width:100%;min-width:0;max-width:100%;overflow-x:hidden}
+.app,.main,.content,.view,.panel,.card,.hero,.toolbar,.stats,.quick,.grid,.folder-grid,.video-grid,.bottom{min-width:0;max-width:100%}
+img,video,canvas,iframe{display:block;max-width:100%;height:auto}
+button,input,select,textarea{font:inherit;min-width:0}
+.content{width:100%;max-width:1500px;margin-inline:auto;padding-inline:clamp(12px,2.5vw,36px);padding-bottom:calc(100px + env(safe-area-inset-bottom))}
+.top{width:100%;max-width:1500px;margin-inline:auto;gap:clamp(8px,1.5vw,18px);padding-inline:clamp(12px,2.5vw,36px)}
+.top .search{min-width:0;flex:1 1 320px}
+.search input{width:100%;min-width:0}
+.hero{width:100%;min-width:0}
+.hero h1{font-size:clamp(24px,3.2vw,42px);line-height:1.25;overflow-wrap:anywhere}
+.hero p{font-size:clamp(13px,1.2vw,16px);line-height:1.8;overflow-wrap:anywhere}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(8px,1.2vw,16px)}
+.quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(8px,1.2vw,16px)}
+.video-grid,.folder-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(220px,100%),1fr));gap:clamp(8px,1.2vw,16px)}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(10px,1.5vw,18px)}
+.panel,.card,.stat,.quick button{min-width:0;overflow:hidden}
+.card b,.card small,.stat small,.panel h2,.panel h3{overflow-wrap:anywhere}
+.bottom{position:fixed;left:0;right:0;bottom:0;width:100%;z-index:100;padding:7px clamp(6px,1.5vw,18px) calc(7px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:7px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;background:color-mix(in srgb,var(--panel,#101827) 88%,transparent);backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);border-top:1px solid rgba(255,255,255,.12)}
+.bottom::-webkit-scrollbar{display:none}
+.bottom button{flex:0 0 auto;width:clamp(66px,9vw,104px);min-width:66px;height:54px;padding:5px 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bottom i{display:block;font-size:18px;margin-bottom:3px}
+@media (max-width:1100px){
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .quick{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .formgrid{grid-template-columns:1fr}
+ .video-grid,.folder-grid{grid-template-columns:repeat(auto-fill,minmax(min(190px,100%),1fr))}
+}
+@media (max-width:700px){
+ .content{padding-inline:10px;padding-top:14px;padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+ .top{padding:8px 10px;min-height:58px}
+ .top .search{flex:1 1 100%}
+ .hero h1{font-size:clamp(23px,7vw,31px)}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .quick{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .quick button{min-height:105px;padding:12px}
+ .video-grid,.folder-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .bottom{gap:5px}
+ .bottom button{width:72px;min-width:72px;height:52px;font-size:10px}
+}
+@media (max-width:390px){
+ .content{padding-inline:8px}
+ .video-grid,.folder-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+ .stats{gap:6px}
+ .stat{padding:10px}
+ .quick{gap:6px}
+ .quick button{min-height:92px;padding:9px}
+ .bottom button{width:68px;min-width:68px;font-size:9px}
+}
+@media (max-width:340px){
+ .video-grid,.folder-grid{grid-template-columns:1fr}
+ .quick{grid-template-columns:1fr}
+ .stats{grid-template-columns:1fr 1fr}
+}
+@media (orientation:landscape) and (max-height:560px){
+ .content{padding-bottom:78px}
+ .bottom button{height:48px}
+ .hero{padding-top:4px}
+}
+@media (min-width:1600px){
+ .content,.top{max-width:1600px}
+}
+@media (prefers-reduced-motion:reduce){
+ *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
+}
+@media (pointer:coarse){
+ .bottom button,.btn,button{min-height:44px}
+}
+
+/* ===== Final Responsive Layout v2 ===== */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+body{min-height:100dvh}
+.main{width:100%;min-width:0}
+.content{width:100%;max-width:1600px;margin-inline:auto;padding-inline:clamp(10px,2.2vw,36px);padding-top:clamp(14px,2vw,28px);padding-bottom:calc(102px + env(safe-area-inset-bottom))}
+.top{width:100%;max-width:1600px;min-width:0;margin-inline:auto;padding-inline:clamp(10px,2.2vw,36px)}
+.top .search{min-width:0;max-width:none;flex:1 1 auto}.top-actions{min-width:0;flex:0 0 auto}
+.hero{min-width:0;text-align:right}.hero h1,.hero p{max-width:100%;overflow-wrap:anywhere}.hero h1{font-size:clamp(24px,4vw,42px);line-height:1.3}.hero p{font-size:clamp(12px,1.5vw,17px);line-height:1.9}
+.stats{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:clamp(8px,1.2vw,16px)}.stat{min-width:0}
+.quick{grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:clamp(8px,1.2vw,16px)}
+.grid,.video-grid,.folder-grid{grid-template-columns:repeat(auto-fill,minmax(min(230px,100%),1fr));gap:clamp(8px,1.2vw,16px)}
+.panel{min-width:0}.toolbar{min-width:0}.toolbar>*{min-width:0}
+.video-folder-browser,.tabs,.bottom{overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch}
+.bottom{left:50%;right:auto;transform:translateX(-50%);width:min(1180px,calc(100vw - 16px));max-width:calc(100vw - 16px);padding:7px 8px calc(7px + env(safe-area-inset-bottom));border-radius:20px;display:flex;justify-content:flex-start;gap:6px;overflow-x:auto;overflow-y:hidden}
+.bottom button{flex:0 0 auto;width:clamp(70px,8vw,104px);min-width:70px;max-width:104px}
+@media (min-width:1200px){.stats{grid-template-columns:repeat(5,minmax(0,1fr))}.quick{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (min-width:701px) and (max-width:1199px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.quick{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:700px){.top{min-height:58px}.content{padding-inline:10px;padding-top:14px;padding-bottom:calc(92px + env(safe-area-inset-bottom))}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat{padding:12px;border-radius:16px}.stat b{font-size:clamp(18px,5vw,23px)}.quick{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.quick button{min-height:96px;padding:11px}.grid,.video-grid,.folder-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.media-card{border-radius:14px}.meta{padding:8px}.bottom{bottom:8px;width:calc(100vw - 12px);max-width:calc(100vw - 12px);border-radius:18px}.bottom button{width:74px;min-width:74px;height:52px;font-size:10px}}
+@media (max-width:430px){.content{padding-inline:8px}.hero h1{font-size:clamp(22px,7vw,29px)}.hero p{font-size:12px;line-height:1.8}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.quick{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.quick button{min-height:88px;padding:9px}.grid,.video-grid,.folder-grid{gap:6px}.bottom{bottom:6px;width:calc(100vw - 10px);max-width:calc(100vw - 10px);padding-inline:5px}.bottom button{width:68px;min-width:68px;height:50px;font-size:9px}}
+@media (max-width:340px){.stats,.quick,.grid,.video-grid,.folder-grid{grid-template-columns:1fr}.stat,.quick button{min-height:0}.bottom button{width:64px;min-width:64px}}
+@media (orientation:landscape) and (max-height:560px){.content{padding-bottom:calc(78px + env(safe-area-inset-bottom))}.bottom{bottom:4px}.bottom button{height:46px}}
+@media (min-width:1600px){.content,.top{max-width:1600px}}
+
+/* ===== Adaptive Navigation: all sections always accessible ===== */
+@media (min-width: 1050px){
+  .sidebar{display:block!important;right:0;left:auto;width:274px;height:100dvh;padding:20px 15px 24px;border-right:0;border-left:1px solid var(--line);overflow-y:auto;}
+  .main{margin-right:274px;width:calc(100% - 274px);padding-bottom:24px;min-width:0}
+  .top{max-width:none}
+  .content{max-width:1600px}
+  .bottom{display:none!important}
+  .desktop-nav-note{display:block}
+}
+@media (max-width: 1049px){
+  .sidebar{display:none!important}
+  .main{margin:0;width:100%}
+  .bottom{
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    grid-auto-rows:58px;
+    align-items:stretch;
+    justify-content:stretch;
+    width:min(760px,calc(100vw - 12px));
+    max-width:calc(100vw - 12px);
+    height:auto;
+    max-height:none;
+    padding:7px 7px calc(7px + env(safe-area-inset-bottom));
+    gap:5px;
+    overflow:visible;
+    border-radius:20px;
+  }
+  .bottom button{
+    width:auto!important;min-width:0!important;max-width:none!important;height:auto!important;
+    min-height:0!important;padding:6px 3px!important;border-radius:13px!important;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+    font-size:10px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .bottom button i{font-size:16px;margin:0;line-height:1}
+  .bottom button:nth-child(6){grid-column:1}
+  .bottom button:nth-child(7){grid-column:2}
+  .bottom button:nth-child(8){grid-column:3}
+  .bottom button:nth-child(9){grid-column:4}
+  .content{padding-bottom:calc(145px + env(safe-area-inset-bottom))}
+}
+@media (max-width:430px){
+  .bottom{grid-auto-rows:54px;gap:4px;padding:6px 6px calc(6px + env(safe-area-inset-bottom));bottom:5px}
+  .bottom button{font-size:9px;padding:5px 2px!important}
+  .bottom button i{font-size:15px}
+  .content{padding-bottom:calc(136px + env(safe-area-inset-bottom))}
+}
+@media (max-width:350px){
+  .bottom{grid-auto-rows:51px;gap:3px;border-radius:17px}
+  .bottom button{font-size:8px}
+  .bottom button i{font-size:14px}
+  .content{padding-bottom:calc(128px + env(safe-area-inset-bottom))}
+}
+@media (orientation:landscape) and (max-height:560px) and (max-width:1049px){
+  .bottom{grid-template-columns:repeat(9,minmax(0,1fr));grid-auto-rows:50px;height:62px;overflow:hidden}
+  .bottom button:nth-child(6),.bottom button:nth-child(7),.bottom button:nth-child(8),.bottom button:nth-child(9){grid-column:auto}
+  .content{padding-bottom:calc(78px + env(safe-area-inset-bottom))}
+}
+/* Sidebar navigation */
+.sidebar .nav{grid-template-columns:1fr;gap:7px}
+.sidebar .nav button{min-height:50px;font-size:13px}
+.sidebar .nav button i{font-size:16px;width:25px}
+.sidebar .side-box{margin-top:20px}
+.sidebar .desktop-nav-note{font-size:10px;color:var(--muted);margin:0 8px 10px;line-height:1.7}
+
+
+/* Unified media/folder actions */
+@media(max-width:600px){.meta-actions{gap:5px}.meta-actions .mini{height:40px;font-size:10px}.meta-actions .mini i{font-size:13px}.folder-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.folder{padding:12px;border-radius:17px}.folder-head>div:first-child{gap:8px}.folder-icon{width:42px;height:42px;flex-basis:42px;font-size:19px}.folder b{font-size:13px}.folder small{font-size:10px}.folder-actions{gap:6px}.folder-actions .btn,.folder-actions .mini{height:39px;font-size:10px}}
+@media(max-width:360px){.meta-actions .mini span{display:none}.meta-actions .mini{height:38px}.meta-actions .mini i{font-size:14px}.folder-grid{grid-template-columns:1fr}.folder-actions .btn,.folder-actions .mini{height:40px;font-size:11px}}
+</style>
+
+<style id="transfer-progress-style">.transfer-progress{position:fixed;left:50%;top:18px;transform:translateX(-50%);width:min(520px,calc(100vw - 24px));padding:14px 16px;border-radius:18px;background:linear-gradient(135deg,rgba(15,28,52,.97),rgba(28,42,76,.97));border:1px solid color-mix(in srgb,var(--p2) 42%,var(--line));box-shadow:0 18px 55px #0009;backdrop-filter:blur(20px);z-index:5000;display:none;direction:rtl}.transfer-progress.show{display:block}.transfer-progress-head{display:flex;align-items:center;justify-content:space-between}.transfer-progress-count{font-size:12px;color:var(--muted)}.transfer-progress-track{height:9px;border-radius:99px;background:#0c1528;overflow:hidden;margin-top:10px}.transfer-progress-bar{height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--p),var(--p2),var(--p3));transition:width .12s ease}.transfer-progress-note{margin-top:7px;color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}</style>
+<style id="import-progress-style">
+.import-progress{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);width:min(520px,calc(100vw - 24px));padding:14px 16px;border-radius:18px;background:linear-gradient(135deg,rgba(15,28,52,.96),rgba(28,42,76,.96));border:1px solid color-mix(in srgb,var(--p2) 38%,var(--line));box-shadow:0 18px 55px #0009,0 0 30px color-mix(in srgb,var(--p2) 10%,transparent);backdrop-filter:blur(20px);z-index:1200;display:none;direction:rtl}
+.import-progress.show{display:block}
+.import-progress-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.import-progress-title{font-weight:800;font-size:14px}.import-progress-count{font-size:12px;color:var(--muted)}
+.import-progress-track{height:8px;border-radius:99px;background:#0c1528;overflow:hidden;border:1px solid #ffffff10}
+.import-progress-bar{height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--p),var(--p2),var(--p3));transition:width .2s ease}
+.import-progress-note{margin-top:7px;color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:900px){.import-progress{bottom:112px}}
+</style>
+</head>
+<body>
+<aside id="sidebar" class="sidebar" aria-label="أقسام Video Hub Pro">
+  <div class="brand">
+    <div class="logo"><i class="fa-solid fa-photo-film"></i></div>
+    <div><b>Video Hub Pro</b><small>مكتبة الوسائط المتكاملة</small></div>
+  </div>
+  <div class="desktop-nav-note">جميع الأقسام ظاهرة هنا دائمًا على الشاشات الكبيرة. اضغط مطولًا واسحب لتغيير ترتيبها.</div>
+  <div class="nav-title">الأقسام الرئيسية</div>
+  <nav class="nav" id="sideNav">
+    <button data-view="home" onclick="nav('home')"><i class="fa-solid fa-house"></i><span>الرئيسية</span></button>
+    <button data-view="storage" onclick="nav('storage')"><i class="fa-solid fa-hard-drive"></i><span>التخزين</span></button>
+    <button data-view="videos" onclick="nav('videos')"><i class="fa-solid fa-film"></i><span>الفيديوهات</span></button>
+    <button data-view="images" onclick="nav('images')"><i class="fa-solid fa-image"></i><span>الصور</span></button>
+    <button data-view="folders" onclick="nav('folders')"><i class="fa-solid fa-folder"></i><span>المجلدات</span></button>
+    <button data-view="favorites" onclick="nav('favorites')"><i class="fa-solid fa-star"></i><span>المفضلة</span></button>
+    <button data-view="trash" onclick="openTrash()"><i class="fa-solid fa-trash-can"></i><span>السلة</span></button>
+    <button data-view="pair" onclick="nav('pair')"><i class="fa-solid fa-link"></i><span>الاقتران</span></button>
+    <button data-view="settings" onclick="nav('settings')"><i class="fa-solid fa-gear"></i><span>الإعدادات</span></button>
+  </nav>
+  <div class="side-box">
+    <small style="color:var(--muted)">حالة المكتبة</small>
+    <div style="display:flex;justify-content:space-between;gap:8px;margin-top:7px"><b id="sideMediaCount">0</b><span style="color:var(--muted);font-size:10px">ملف</span></div>
+    <div class="progress"><i id="sideProgress"></i></div>
+  </div>
+</aside>
+
+<div class="app"><main class="main">
+<header class="top">
+  <div class="search"><i class="fa-solid fa-magnifying-glass"></i><input id="search" class="input" placeholder="ابحث في الفيديوهات والصور والمجلدات..." oninput="renderCurrent()"></div>
+  <div class="top-actions">
+    
+    <button class="btn primary desktop" onclick="openAddMenu()">＋ إضافة</button>
+    <button class="icon-btn" onclick="toggleThemeCycle()" title="تغيير المظهر"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
+  </div>
+</header>
+
+<div class="content">
+<button id="remoteBackFloat" class="remote-back-float" onclick="closeRemoteSession()" title="الرجوع إلى البرنامج الأساسي" aria-label="الرجوع إلى البرنامج الأساسي">←</button>
+<section id="view-home" class="view active">
+  <div class="hero"><h1>مكتبتك، في مكان واحد.</h1><p>إدارة الفيديوهات والصور والمجلدات والمفضلة والسلة والاقتران، بواجهة زجاجية موحدة وسريعة.</p></div>
+  <div class="stats">
+    <div class="stat"><div class="ico"><i class="fa-solid fa-film"></i></div><small>الفيديوهات</small><b id="stVideos">0</b></div>
+    <div class="stat"><div class="ico"><i class="fa-solid fa-image"></i></div><small>الصور</small><b id="stImages">0</b></div>
+    <div class="stat"><div class="ico"><i class="fa-solid fa-folder"></i></div><small>المجلدات</small><b id="stFolders">0</b></div>
+    <div class="stat"><div class="ico"><i class="fa-solid fa-star"></i></div><small>المفضلة</small><b id="stFav">0</b></div>
+    <div class="stat"><div class="ico"><i class="fa-solid fa-trash"></i></div><small>السلة</small><b id="stTrash">0</b></div>
+  </div>
+  <div class="storage-hero">
+    <div class="storage-card">
+      <div class="storage-title"><div class="storage-icon"><i class="fa-solid fa-hard-drive"></i></div><div><h2 style="margin:0">مساحة التخزين</h2><small class="storage-sub">إجمالي حجم الملفات مقارنة بالسعة التي تحددها بنفسك</small></div></div>
+      <div class="storage-big" id="homeStorageUsed">0 B</div>
+      <div class="storage-sub" id="homeStorageQuota">السعة المحددة: لم يتم تحديدها</div>
+      <div class="storage-limit"><input id="homeStorageLimitInput" class="input" type="number" min="1" step="0.1" placeholder="حدد السعة" onkeydown="if(event.key==='Enter')saveStorageLimitFromHome()"><select id="homeStorageLimitUnit" class="input"><option value="B">B</option><option value="KB">KB</option><option value="MB">MB</option><option value="GB">GB</option><option value="TB">TB</option></select></div>
+      <div class="storage-actions"><button class="btn primary" onclick="saveStorageLimitFromHome()">حفظ السعة</button><button class="btn" onclick="nav('storage')">إدارة التخزين</button></div>
+      <div class="storage-track"><div id="homeStorageBar" class="storage-fill"></div></div>
+      <div class="storage-percent"><span id="homeStoragePercent">لم تحدد السعة</span><span id="homeStorageFree">المتبقي: —</span></div>
+    </div>
+  </div>
+  <div class="quick">
+    <button onclick="addLocal('video')"><i class="fa-solid fa-video"></i><b>إضافة فيديوهات</b><small>اختيار فيديو واحد أو عدة فيديوهات من الجهاز.</small></button>
+    <button onclick="addLocal('image')"><i class="fa-solid fa-image"></i><b>إضافة صور</b><small>إضافة صور متعددة وحفظها محليًا.</small></button>
+    <button onclick="openUrlModal()"><i class="fa-solid fa-link"></i><b>إضافة من رابط</b><small>حفظ رابط فيديو يدعمه المتصفح.</small></button>
+    <button onclick="createFolder()"><i class="fa-solid fa-folder-plus"></i><b>مجلد جديد</b><small>تنظيم المكتبة داخل مجلدات.</small></button>
+  </div>
+  <div class="panel"><div class="toolbar"><h2 style="margin:0">آخر الملفات</h2><span class="spacer"></span><button class="btn" onclick="nav('videos')">عرض الفيديوهات</button></div><div id="recentGrid" class="grid"></div></div>
+</section>
+
+<section id="view-videos" class="view">
+  <div class="panel">
+    <div class="toolbar"><h2>الفيديوهات</h2><span class="spacer"></span><button id="selectBtn" class="btn" onclick="toggleSelectMode()">☑ تحديد متعدد</button><button class="btn primary" onclick="addLocal('video')">＋ محلي</button><button class="btn" onclick="openUrlModal()">🔗 رابط</button></div>
+    <div class="tabs"><button class="tab active" onclick="setVideoFilter('all',this)">الكل</button><button class="tab" onclick="setVideoFilter('local',this)">📱 محلي</button><button class="tab" onclick="setVideoFilter('url',this)">🔗 روابط</button><button class="tab" onclick="setVideoFilter('fav',this)">★ المفضلة</button></div>
+    <div class="video-folder-area"><div class="video-folder-head"><div><h3>مجلدات الفيديو</h3><small>افتح المجلد ثم ستظهر فيديوهاته بداخله.</small></div><button class="btn" onclick="createFolder()">＋ مجلد</button></div><div id="videoFolderBrowser" class="video-folder-browser"></div><div id="videoFolderCrumb" class="video-folder-crumb">كل الفيديوهات</div></div>
+    <div class="toolbar"><select id="sort" class="input" style="width:auto" onchange="renderVideos()"><option value="new">الأحدث أولًا</option><option value="old">الأقدم أولًا</option><option value="name">الاسم</option><option value="size">الحجم</option></select><select id="folderFilter" class="input" style="width:auto" onchange="currentVideoFolder=this.value||null;renderVideos()"><option value="">كل المجلدات</option></select></div>
+    <div id="videoGrid" class="grid"></div>
+  </div>
+</section>
+
+<section id="view-images" class="view">
+  <div class="panel"><div class="toolbar"><h2>معرض الصور</h2><span class="spacer"></span><button class="btn" onclick="openColorFilter()">🎨 ألوان</button><button class="btn primary" onclick="addLocal('image')">＋ إضافة صور</button></div><div class="toolbar"><select id="imageFolderFilter" class="input" style="width:auto" onchange="renderImages()"><option value="">كل المجلدات</option></select><select id="imageColorFilter" class="input" style="width:auto" onchange="renderImages()"><option value="">كل الألوان</option><option value="red">أحمر</option><option value="orange">برتقالي</option><option value="yellow">أصفر</option><option value="green">أخضر</option><option value="cyan">تركوازي</option><option value="blue">أزرق</option><option value="purple">بنفسجي</option><option value="pink">وردي</option></select></div><div id="imageGrid" class="grid"></div></div>
+</section>
+
+<section id="view-folders" class="view">
+  <div class="panel"><div class="toolbar"><h2>المجلدات</h2><span class="spacer"></span><button class="btn primary" onclick="createFolder()">＋ مجلد جديد</button></div><div id="folderGrid" class="folder-grid"></div></div>
+</section>
+
+<section id="view-favorites" class="view"><div class="panel"><div class="toolbar"><h2>المفضلة</h2><span class="spacer"></span><span class="safe-note">الفيديوهات والصور التي اخترتها</span></div><div id="favGrid" class="grid"></div></div></section>
+
+<section id="view-trash" class="view"><div class="panel"><div class="toolbar"><h2>سلة المحذوفات</h2><span class="spacer"></span><button class="btn danger" onclick="emptyTrash()">تفريغ السلة</button></div><div id="trashGrid" class="grid"></div></div></section>
+
+<section id="view-pair" class="view">
+  <div class="hero"><h1>الاقتران والمشاركة</h1><p>أنشئ رمزًا من 6 أرقام لكل عملية اقتران، أو اتصل بجهاز آخر. الاقتران يعتمد على اتصال الإنترنت وخدمة PeerJS.</p></div>
+  <div class="pair-layout">
+    <div class="panel">
+      <h2>جهازي</h2><div class="toolbar"><button class="btn primary" onclick="createPair()">＋ إنشاء رمز اقتران من 6 أرقام</button><button class="btn" onclick="copyPair()">📋 نسخ الرمز</button><button class="btn" onclick="renewPair()">↻ رمز جديد</button><button class="btn primary" onclick="openRemoteFullApp()">📱 فتح برنامج الجهاز المقترن</button></div>
+      <div id="pairCode" class="pair-code">— — — — — —</div><div id="pairStatus" class="status">لم يتم إنشاء قناة اتصال بعد.</div><div id="syncStatus" class="sync-status">بعد الاقتران ستظهر مكتبة الجهاز الآخر تلقائيًا.</div><div id="devices"></div><div id="remoteLibraryActions" class="remote-library-actions" hidden><button class="btn" onclick="syncLibrary()">↻ تحديث محتوى الجهاز المقترن</button></div>
+      <div class="panel" style="margin-top:14px;margin-bottom:0"><h3>إرسال ملف محدد</h3><p class="safe-note">فعّل التحديد المتعدد من قسم الفيديوهات ثم اختر «نقل لجهاز» لإرسال العناصر المحددة.</p><button class="btn" onclick="nav('videos')">الذهاب للفيديوهات</button></div>
+    </div>
+    <div class="panel">
+      <h2>الاتصال بجهاز آخر</h2><div class="field"><label>رمز الجهاز الآخر</label><input id="joinCode" class="input" inputmode="numeric" maxlength="6" placeholder="000000"></div><button class="btn primary" style="margin-top:10px" onclick="joinPair()">🔗 اتصال بالجهاز</button><div id="joinStatus" class="status" style="margin-top:12px">أدخل رمزًا من 6 أرقام.</div>
+      <hr style="border:0;border-top:1px solid var(--line);margin:18px 0"><h3>الخصوصية</h3><div class="safe-note">رمز الاقتران مؤقت للعملية الحالية. لا يتم رفع مكتبتك إلى خادم التطبيق؛ الملفات المحلية تبقى داخل المتصفح ما لم ترسلها بنفسك عبر الاتصال.</div>
+    </div>
+  </div>
+</section>
+
+<section id="view-storage" class="view">
+  <div class="hero"><h1>مساحة التخزين</h1><p>حدد بنفسك السعة التي تريد تخصيصها للمكتبة، والبرنامج يحسب إجمالي حجم ملفاتك داخلها.</p></div>
+  <div class="storage-hero">
+    <div class="storage-card">
+      <div class="storage-title"><div class="storage-icon"><i class="fa-solid fa-database"></i></div><div><h2 style="margin:0">إجمالي الملفات</h2><small class="storage-sub">الحجم الفعلي للملفات المحفوظة في المكتبة</small></div></div>
+      <div class="storage-big" id="storageUsedBig">0 B</div>
+      <div class="storage-sub" id="storageQuotaBig">السعة المحددة: لم يتم تحديدها</div>
+      <div class="storage-limit"><input id="storageLimitInput" class="input" type="number" min="1" step="0.1" placeholder="مثال: 10"><select id="storageLimitUnit" class="input"><option value="B">B</option><option value="KB">KB</option><option value="MB">MB</option><option value="GB">GB</option><option value="TB">TB</option></select></div>
+      <div class="storage-actions"><button class="btn primary" onclick="saveStorageLimit()">حفظ السعة المحددة</button><button class="btn" onclick="clearStorageLimit()">إلغاء تحديد السعة</button></div>
+      <div class="storage-track"><div id="storageMainBar" class="storage-fill"></div></div>
+      <div class="storage-percent"><span id="storagePercentBig">لم تحدد السعة</span><span id="storageFreeBig">المتبقي: —</span></div>
+      <div class="storage-note">السعة هنا من اختيارك أنت، وليست سعة يفرضها المتصفح. البرنامج يستخدمها فقط كحد تنظيمي لعرض نسبة الاستخدام.</div>
+    </div>
+  </div>
+</section>
+
+<section id="view-settings" class="view">
+  <div class="panel"><h2>المظهر والألوان</h2><p class="safe-note">اختر مجموعة ألوان متناسقة؛ التصميم يستخدم تدرجات متعددة بدل لون واحد.</p><div class="theme-grid">
+    <button class="theme" data-theme="aurora" onclick="setTheme('aurora')"><div class="theme-dot" style="background:linear-gradient(135deg,#7c5cff,#18c8ff,#00e6a7)"></div>Aurora</button>
+    <button class="theme" data-theme="ocean" onclick="setTheme('ocean')"><div class="theme-dot" style="background:linear-gradient(135deg,#00a8ff,#00e6d8,#69f7b1)"></div>Ocean</button>
+    <button class="theme" data-theme="sunset" onclick="setTheme('sunset')"><div class="theme-dot" style="background:linear-gradient(135deg,#ff4d8d,#ff9d2e,#ffe066)"></div>Sunset</button>
+    <button class="theme" data-theme="emerald" onclick="setTheme('emerald')"><div class="theme-dot" style="background:linear-gradient(135deg,#00c987,#25d9ff,#b6ff66)"></div>Emerald</button>
+    <button class="theme" data-theme="neon" onclick="setTheme('neon')"><div class="theme-dot" style="background:linear-gradient(135deg,#b24cff,#00e5ff,#ff00aa)"></div>Neon</button>
+    <button class="theme" data-theme="midnight" onclick="setTheme('midnight')"><div class="theme-dot" style="background:linear-gradient(135deg,#6366f1,#38bdf8,#34d399)"></div>Midnight</button>     <button class="theme" data-theme="lavender" onclick="setTheme('lavender')"><div class="theme-dot" style="background:linear-gradient(135deg,#c084fc,#67e8f9,#a7f3d0)"></div>Lavender</button>     <button class="theme" data-theme="coral" onclick="setTheme('coral')"><div class="theme-dot" style="background:linear-gradient(135deg,#ff6b6b,#ffd166,#7ee7c1)"></div>Coral</button>     <button class="theme" data-theme="sky" onclick="setTheme('sky')"><div class="theme-dot" style="background:linear-gradient(135deg,#38bdf8,#a7f3d0,#fde68a)"></div>Sky</button>     <button class="theme" data-theme="mint" onclick="setTheme('mint')"><div class="theme-dot" style="background:linear-gradient(135deg,#34d399,#67e8f9,#fef08a)"></div>Mint</button>     <button class="theme" data-theme="rose" onclick="setTheme('rose')"><div class="theme-dot" style="background:linear-gradient(135deg,#fb7185,#f9a8d4,#fde68a)"></div>Rose</button>
+  </div></div>
+  <div class="panel"><h2>التشغيل والحماية</h2>
+    <div class="setting-row"><div><b>التشغيل التلقائي</b><small>تشغيل الفيديو عند فتحه إذا لم توجد مشاهدة سابقة.</small></div><label class="switch"><input id="autoplay" type="checkbox" checked onchange="saveSettings()"><span></span></label></div>
+    <div class="setting-row"><div><b>تأكيد الحذف</b><small>إظهار تأكيد قبل نقل الملف إلى السلة.</small></div><label class="switch"><input id="confirmDelete" type="checkbox" checked onchange="saveSettings()"><span></span></label></div>
+    <div class="setting-row"><div><b>حفظ موضع المشاهدة</b><small>متابعة الفيديو من آخر نقطة توقفت عندها.</small></div><label class="switch"><input id="resume" type="checkbox" checked onchange="saveSettings()"><span></span></label></div>
+  </div>
+  <div class="panel">
+    <div class="toolbar"><div><h2 style="margin-bottom:3px">استيراد وتصدير البيانات</h2><div class="safe-note">نسخة كاملة قابلة للنقل بين المتصفحات والأجهزة.</div></div><span class="spacer"></span><span class="badge" style="position:static">Full Backup</span></div>
+    <div class="import-export-card">
+      <div class="backup-feature"><h3><i class="fa-solid fa-cloud-arrow-up" style="color:var(--p2)"></i> تصدير البيانات</h3><p>يحفظ الإعدادات والمجلدات وترتيب الأقسام وبيانات الفيديوهات والصور، مع الملفات المحلية والصور المصغرة داخل ملف واحد.</p><div class="backup-actions"><button class="btn primary" onclick="exportFullBackup()"><i class="fa-solid fa-file-export"></i> تصدير نسخة كاملة</button><button class="btn" onclick="exportBackup()"><i class="fa-solid fa-code"></i> تصدير JSON خفيف</button></div></div>
+      <div class="backup-feature"><h3><i class="fa-solid fa-cloud-arrow-down" style="color:var(--p3)"></i> استيراد البيانات</h3><p>استعد بياناتك من نسخة Video Hub Pro. الاستيراد يدمج البيانات مع المكتبة الحالية ويحافظ على الإعدادات والثيم.</p><div class="backup-actions"><button class="btn primary" onclick="document.getElementById('fullBackupInput').click()"><i class="fa-solid fa-file-import"></i> استيراد نسخة كاملة</button><button class="btn" onclick="document.getElementById('backupInput').click()"><i class="fa-solid fa-rotate-left"></i> استيراد JSON خفيف</button><input id="fullBackupInput" type="file" accept=".json,.vhp,.vhp.json" class="hidden" onchange="importFullBackup(this.files[0])"><input id="backupInput" type="file" accept=".json" class="hidden" onchange="importBackup(this.files[0])"></div></div>
+    </div>
+    <div class="backup-meta" style="margin-top:14px"><div class="backup-stat"><small>طريقة التخزين</small><b>IndexedDB</b></div><div class="backup-stat"><small>نوع النسخة الكاملة</small><b>JSON + ملفات</b></div><div class="backup-stat"><small>الاستيراد</small><b>دمج آمن</b></div><div class="backup-stat"><small>الإعدادات</small><b>تُحفظ أيضًا</b></div></div>
+  </div>
+  <div class="panel"><h2>بيانات التطبيق</h2><div class="status">Video Hub Pro — Unified Edition<br>الإصدار 2.1.0<br>التخزين: IndexedDB<br>واجهة عربية RTL ومتجاوبة مع الهاتف والكمبيوتر.</div><button class="btn danger" style="margin-top:12px" onclick="clearAll()">مسح جميع البيانات نهائيًا</button></div>
+</section>
+</div>
+</main>
+</div>
+
+<nav class="bottom" aria-label="التنقل الرئيسي">
+ <button data-view="home" class="active" onclick="nav('home')"><i class="fa-solid fa-house"></i>الرئيسية</button>
+ <button data-view="storage" onclick="nav('storage')"><i class="fa-solid fa-hard-drive"></i>التخزين</button>
+ <button data-view="videos" onclick="nav('videos')"><i class="fa-solid fa-film"></i>الفيديوهات</button>
+ <button data-view="images" onclick="nav('images')"><i class="fa-solid fa-image"></i>الصور</button>
+ <button data-view="folders" onclick="nav('folders')"><i class="fa-solid fa-folder"></i>المجلدات</button>
+ <button data-view="favorites" onclick="nav('favorites')"><i class="fa-solid fa-star"></i>المفضلة</button>
+ <button data-view="trash" onclick="openTrash()"><i class="fa-solid fa-trash-can"></i>السلة</button>
+ <button data-view="pair" onclick="nav('pair')"><i class="fa-solid fa-link"></i>الاقتران</button>
+ <button data-view="settings" onclick="nav('settings')"><i class="fa-solid fa-gear"></i>الإعدادات</button>
+</nav>
+
+<div id="bulk" class="bulk"><b id="bulkCount">0 محدد</b><button class="btn" onclick="bulkFavorite()">★ مفضلة</button><button class="btn" onclick="bulkMove()">📁 نقل</button><button class="btn" onclick="bulkSend()">📤 نقل لجهاز</button><button class="btn danger" onclick="bulkDelete()">🗑 حذف</button><button class="btn" onclick="toggleSelectMode()">إلغاء</button></div>
+
+<div id="more" class="more-sheet" onclick="if(event.target===this)closeMore()"><div class="sheet"><div style="width:45px;height:4px;background:#55627a;border-radius:9px;margin:0 auto 13px"></div><button onclick="closeMore();openTrash()"><i class="fa-solid fa-trash-can" style="color:var(--danger)"></i> سلة المحذوفات</button><button onclick="closeMore();nav('pair')"><i class="fa-solid fa-link" style="color:var(--p2)"></i> الاقتران والمشاركة</button><button onclick="closeMore();nav('settings')"><i class="fa-solid fa-gear" style="color:var(--gold)"></i> الإعدادات والمظهر</button><button onclick="closeMore();showInfo()"><i class="fa-solid fa-circle-info"></i> معلومات التطبيق</button></div></div>
+
+<div id="addModal" class="modal" onclick="if(event.target===this)closeModal('addModal')"><div class="modalbox"><div class="modalhead"><h2>إضافة إلى المكتبة</h2><button class="close" onclick="closeModal('addModal')">×</button></div><div class="quick"><button onclick="closeModal('addModal');addLocal('video')"><i class="fa-solid fa-video"></i><b>فيديوهات محلية</b><small>من الجهاز</small></button><button onclick="closeModal('addModal');addLocal('image')"><i class="fa-solid fa-image"></i><b>صور</b><small>من الجهاز</small></button><button onclick="closeModal('addModal');openUrlModal()"><i class="fa-solid fa-link"></i><b>فيديو من رابط</b><small>رابط مباشر</small></button></div></div></div>
+
+<div id="urlModal" class="modal"><div class="modalbox"><div class="modalhead"><h2>إضافة فيديو من رابط</h2><button class="close" onclick="closeModal('urlModal')">×</button></div><div class="formgrid"><div class="field full"><label>الرابط المباشر للفيديو</label><input id="urlInput" class="input" placeholder="https://.../video.mp4"></div><div class="field full"><label>اسم الفيديو</label><input id="urlName" class="input" placeholder="اسم اختياري"></div></div><div class="toolbar" style="margin-top:14px"><span class="spacer"></span><button class="btn" onclick="closeModal('urlModal')">إلغاء</button><button class="btn primary" onclick="saveUrl()">إضافة الفيديو</button></div></div></div>
+
+<div id="folderModal" class="modal"><div class="modalbox" style="max-width:520px"><div class="modalhead"><h2>إنشاء مجلد جديد</h2><button class="close" onclick="closeModal('folderModal')">×</button></div><input id="folderName" class="input" placeholder="اسم المجلد"><div class="toolbar" style="margin-top:14px"><span class="spacer"></span><button class="btn" onclick="closeModal('folderModal')">إلغاء</button><button class="btn primary" onclick="saveFolder()">إنشاء</button></div></div></div>
+
+<div id="videoFolderPicker" class="modal" onclick="if(event.target===this)closeModal('videoFolderPicker')"><div class="modalbox" style="max-width:620px"><div class="modalhead"><h2>أين تريد حفظ الفيديو؟</h2><button class="close" onclick="closeModal('videoFolderPicker')">×</button></div><p class="safe-note">اختر المجلد، وبعد اختيار الفيديو سيتم حفظه داخله مباشرة.</p><div id="videoFolderPickerList" class="folder-picker-grid"></div><div class="toolbar" style="margin-top:14px"><span class="spacer"></span><button class="btn" onclick="closeModal('videoFolderPicker')">إلغاء</button><button class="btn folder-import-btn" onclick="importVideoFolderFromFiles()">📁 أخذ مجلد من الملفات</button><button class="btn" onclick="chooseNewFolderForVideo()">＋ إنشاء مجلد جديد</button></div></div></div>
+
+<div id="moveModal" class="modal"><div class="modalbox" style="max-width:520px"><div class="modalhead"><h2>نقل إلى مجلد</h2><button class="close" onclick="closeModal('moveModal')">×</button></div><div id="moveList" class="folder-grid"></div></div></div>
+
+<div id="colorModal" class="modal"><div class="modalbox" style="max-width:520px"><div class="modalhead"><h2>تحديد لون الصورة</h2><button class="close" onclick="closeModal('colorModal')">×</button></div><div id="colorOptions" class="color-options"></div><div class="toolbar" style="margin-top:13px"><span class="spacer"></span><button class="btn" onclick="setImageColor(null)">بدون لون</button></div></div></div>
+
+<div id="playerModal" class="modal"><div class="modalbox"><div class="modalhead"><h2 id="playerTitle">الفيديو</h2><button class="close" onclick="closePlayer()">×</button></div><div class="player-wrap"><video id="player" class="player" controls playsinline></video><div id="resume" class="resume"><b id="resumeText"></b><div class="toolbar"><button class="btn primary" onclick="resumeYes()">استئناف</button><button class="btn" onclick="resumeNo()">البدء من جديد</button></div></div></div><div class="player-tools"><button class="btn" onclick="seek(-10)">⏪ 10</button><button class="btn" onclick="seek(10)">10 ⏩</button><button class="btn" onclick="togglePip()">▣ PiP</button><button class="btn" onclick="fullscreen()">⛶ ملء الشاشة</button><select id="speed" class="speed" onchange="player.playbackRate=+this.value"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select><button id="playerFav" class="btn" onclick="playerFavorite()">☆ مفضلة</button><button class="btn" onclick="showCurrentInfo()">ℹ️ التفاصيل</button></div><div id="playerInfo" class="status" style="margin-top:11px"></div></div></div>
+
+<div id="imageModal" class="modal"><div class="modalbox"><div class="modalhead"><h2 id="imageTitle">الصورة</h2><button class="close" onclick="closeModal('imageModal')">×</button></div><img id="imageViewer" style="display:block;width:100%;max-height:72vh;object-fit:contain;border-radius:16px;background:#000"><div class="toolbar" style="margin-top:10px"><button class="btn" onclick="rotateImage(-90)">↶</button><button class="btn" onclick="rotateImage(90)">↷</button><button class="btn" onclick="imageFavorite()">☆ مفضلة</button><span class="spacer"></span><button class="btn" onclick="closeModal('imageModal')">إغلاق</button></div></div></div>
+
+<div id="infoModal" class="modal"><div class="modalbox" style="max-width:560px"><div class="modalhead"><h2>تفاصيل العنصر</h2><button class="close" onclick="closeModal('infoModal')">×</button></div><div id="infoBody" class="status"></div></div></div>
+
+<div id="trashModal" class="modal"><div class="modalbox"><div class="modalhead"><h2>سلة المحذوفات</h2><button class="close" onclick="closeModal('trashModal')">×</button></div><div id="trashModalGrid" class="grid"></div></div></div>
+
+<input id="fileInput" type="file" class="hidden" multiple>
+<input id="folderInput" type="file" class="hidden" webkitdirectory directory multiple>
+<canvas id="canvas" class="hidden"></canvas><div id="toast" class="toast"></div><div id="importProgress" class="import-progress" aria-live="polite"><div class="import-progress-head"><span id="importProgressTitle" class="import-progress-title">جاري إضافة الملفات</span><span id="importProgressCount" class="import-progress-count">0%</span></div><div class="import-progress-track"><div id="importProgressBar" class="import-progress-bar"></div></div><div id="importProgressNote" class="import-progress-note">تظهر الملفات في المكتبة فورًا، وتستكمل المعالجة في الخلفية.</div></div><div id="transferProgress" class="transfer-progress" aria-live="polite"><div class="transfer-progress-head"><b id="transferProgressTitle">جاري النقل</b><span id="transferProgressCount" class="transfer-progress-count">0%</span></div><div class="transfer-progress-track"><div id="transferProgressBar" class="transfer-progress-bar"></div></div><div id="transferProgressNote" class="transfer-progress-note">يتم نقل الملف عبر الاتصال بين الجهازين...</div></div>
+
+<style>
+/* Video folder cards: folders stay closed until the user opens them */
+.video-folder-browser{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;overflow:visible;padding:2px}
+.video-folder-item{min-width:0;width:100%;min-height:126px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:6px;text-align:right;border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.025));border-radius:18px;padding:15px;color:var(--text);cursor:pointer;transition:.2s;flex:initial;box-shadow:0 8px 22px rgba(0,0,0,.08)}
+.video-folder-item:hover,.video-folder-item.active{transform:translateY(-2px);border-color:var(--p2);background:linear-gradient(145deg,color-mix(in srgb,var(--p2) 14%,rgba(255,255,255,.06)),rgba(255,255,255,.025));box-shadow:0 10px 26px rgba(0,0,0,.14)}
+.video-folder-item .folder-icon{width:48px;height:48px;margin:0 0 5px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold),color-mix(in srgb,var(--gold) 55%,var(--p2)));color:#172033;font-size:21px}
+.video-folder-item.active .folder-icon{background:linear-gradient(135deg,var(--p2),var(--p3));color:#fff}
+.video-folder-item b{display:block;width:100%;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.video-folder-item small{display:block;color:var(--muted);font-size:11px}
+.video-folder-empty{grid-column:1/-1;text-align:center;padding:18px;color:var(--muted);border:1px dashed var(--line);border-radius:16px}
+.folder-import-btn{border-style:dashed!important}
+@media(max-width:600px){.video-folder-browser{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.video-folder-item{min-height:112px;padding:12px;border-radius:16px}.video-folder-item .folder-icon{width:42px;height:42px;font-size:18px}.video-folder-item b{font-size:12px}.video-folder-item small{font-size:10px}}
+@media(max-width:360px){.video-folder-browser{grid-template-columns:1fr}.video-folder-item{min-height:92px;flex-direction:row;align-items:center}.video-folder-item .folder-icon{margin:0}.video-folder-item b{font-size:13px}}
+
+.remote-item{position:relative}
+.remote-item::after{content:"من الجهاز الآخر";position:absolute;top:10px;left:10px;padding:5px 8px;border-radius:9px;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;font-size:10px;font-weight:800;z-index:4;box-shadow:0 5px 15px rgba(0,0,0,.25)}
+.remote-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.remote-actions .mini{flex:1 1 110px}
+.sync-status{margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);color:var(--muted)}
+</style>
+<script>
+const DB_NAME='VideoHubProUnified', DB_VERSION=3;
+let db=null, currentView='home', videoFilter='all', selectMode=false, selected=new Set();
+let currentItem=null,currentImage=null,imageRotation=0,currentFolderForMove=null,currentVideoFolder=null;
+let peer=null,conn=null,pairCode='', pairTimer=null;
+let activeRemoteCall=null, remoteStreamSource=null, remoteStreamVideo=null, remoteStreamId='';
+let settings={autoplay:true,confirmDelete:true,resume:true};
+const themes=['aurora','ocean','sunset','emerald','neon','midnight','lavender','coral','sky','mint','rose'];
+const colors={red:'#ff5577',orange:'#ff9d2e',yellow:'#ffd166',green:'#00e6a7',cyan:'#18c8ff',blue:'#4d8dff',purple:'#9b5cff',pink:'#ff3cac'};
+
+let pendingMedia=[];
+let remoteSession=false, remoteSourceId='', remoteFolders=[];
+let remoteCatalogCache=null;
+let remotePersistent=false;
+let remoteReconnectTimer=null;
+let remotePrefetchQueue=[];
+let remotePrefetchBusy=false;
+let remotePrefetchCurrentId='';
+const remotePrefetchPending=new Set();
+const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
+const uid=()=>Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,9);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const fmtBytes=n=>{if(!n)return '0 B';let u=['B','KB','MB','GB','TB'],i=0;while(n>=1024&&i<u.length-1){n/=1024;i++}return n.toFixed(i?1:0)+' '+u[i]};
+const fmtTime=s=>{s=Math.max(0,Math.floor(s||0));let m=Math.floor(s/60),sec=String(s%60).padStart(2,'0');return m+':'+sec};
+function toast(msg){const e=$('#toast');e.textContent=msg;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2600)}
+function openModal(id){$('#'+id).classList.add('show')}function closeModal(id){$('#'+id).classList.remove('show')}
+function toggleSidebar(){$('#sidebar').classList.toggle('open')}
+function openMore(){$('#more').classList.add('show')}function closeMore(){$('#more').classList.remove('show')}
+function openAddMenu(){openModal('addModal')}
+
+function dbReq(mode,store,action){
+ return new Promise((resolve,reject)=>{
+  const tx=db.transaction(store,mode), os=tx.objectStore(store), req=action(os);
+  req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
+ });
+}
+async function initDB(){
+ db=await new Promise((resolve,reject)=>{
+  const r=indexedDB.open(DB_NAME,DB_VERSION);
+  r.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains('media'))d.createObjectStore('media',{keyPath:'id'});if(!d.objectStoreNames.contains('folders'))d.createObjectStore('folders',{keyPath:'id'});};
+  r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);
+ });
+}
+const localAllMedia=async()=>{
+ const stored=await dbReq('readonly','media',s=>s.getAll());
+ if(!pendingMedia.length)return stored;
+ const map=new Map(stored.map(x=>[x.id,x]));
+ pendingMedia.filter(x=>!x.remote).forEach(x=>map.set(x.id,x));
+ return [...map.values()];
+};
+const allMedia=async()=>{
+ if(remoteSession){
+   if(remoteCatalogCache && remoteCatalogCache.sourceId===remoteSourceId){
+     return remoteCatalogCache.media.filter(x=>!x.deleted);
+   }
+   return pendingMedia.filter(x=>x.remote&&x.remoteSource===remoteSourceId&&!x.deleted);
+ }
+ return localAllMedia();
+};
+const localAllFolders=()=>dbReq('readonly','folders',s=>s.getAll());
+const allFolders=()=>{
+ if(remoteSession && remoteCatalogCache && remoteCatalogCache.sourceId===remoteSourceId) return Promise.resolve(remoteCatalogCache.folders);
+ return remoteSession?Promise.resolve(remoteFolders.filter(f=>f.remoteSource===remoteSourceId)):localAllFolders();
+};
+const putMedia=x=>{
+ pendingMedia=pendingMedia.filter(p=>p.id!==x.id);
+ return dbReq('readwrite','media',s=>s.put(x));
+};
+const putMediaBatch=records=>new Promise((resolve,reject)=>{
+ const tx=db.transaction('media','readwrite'),os=tx.objectStore('media');
+ records.forEach(x=>os.put(x));
+ tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error||new Error('IndexedDB write failed'));tx.onabort=()=>reject(tx.error||new Error('IndexedDB transaction aborted'));
+});
+const putFolder=x=>dbReq('readwrite','folders',s=>s.put(x));
+const delMedia=id=>dbReq('readwrite','media',s=>s.delete(id));
+const delFolder=id=>dbReq('readwrite','folders',s=>s.delete(id));
+
+async function saveSettings(){settings.autoplay=$('#autoplay').checked;settings.confirmDelete=$('#confirmDelete').checked;settings.resume=$('#resume').checked;localStorage.vhSettings=JSON.stringify(settings)}
+function loadSettings(){try{settings=Object.assign(settings,JSON.parse(localStorage.vhSettings||'{}'))}catch{}$('#autoplay').checked=settings.autoplay;$('#confirmDelete').checked=settings.confirmDelete;$('#resume').checked=settings.resume}
+function setTheme(t){document.documentElement.dataset.theme=t;localStorage.vhTheme=t;$$('.theme').forEach(x=>x.classList.toggle('active',x.dataset.theme===t))}
+function toggleThemeCycle(){let t=document.documentElement.dataset.theme||'aurora';setTheme(themes[(themes.indexOf(t)+1)%themes.length]);toast('تم تغيير المظهر')}
+function loadTheme(){setTheme(localStorage.vhTheme||'aurora')}
+function saveNavOrder(order){localStorage.vhNavOrder=JSON.stringify(order)}
+function getSavedNavOrder(){try{return JSON.parse(localStorage.vhNavOrder||'[]')}catch{return[]}}
+function applyNavOrder(){
+ const saved=getSavedNavOrder();
+ if(!saved.length)return;
+ ['.bottom','.sidebar .nav'].forEach(sel=>{
+   const bar=$(sel); if(!bar)return;
+   // IMPORTANT: only use buttons that actually belong to this navigation bar.
+   // The previous version accidentally queried every button in the document,
+   // which could move modal/action buttons into the navigation and leave it blank.
+   const buttons=[...bar.querySelectorAll(':scope > button')];
+   const map=new Map(buttons.map(b=>[b.dataset.view,b]));
+   const ordered=[];
+   saved.forEach(v=>{const b=map.get(v);if(b){ordered.push(b);map.delete(v)}});
+   map.forEach(b=>ordered.push(b));
+   ordered.forEach(b=>bar.appendChild(b));
+ });
+}
+function initNavReorder(){
+ applyNavOrder();
+ const bars=$$('.bottom,.sidebar .nav');
+ bars.forEach(bar=>{
+   let hold=null,drag=null,moved=false;
+   const clear=()=>{if(hold){clearTimeout(hold);hold=null}};
+   bar.querySelectorAll('button').forEach(btn=>{
+     btn.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;clear();moved=false;hold=setTimeout(()=>{drag=btn;btn.classList.add('dragging');btn.setPointerCapture?.(e.pointerId)},420)});
+     btn.addEventListener('pointermove',e=>{
+       if(!drag||drag!==btn)return;moved=true;
+       const vertical=bar.classList.contains('nav');
+       const target=[...bar.querySelectorAll('button:not(.dragging)')].find(x=>{const r=x.getBoundingClientRect();return vertical?(e.clientY<r.top+r.height/2):(e.clientX<r.left+r.width/2)});
+       if(target)bar.insertBefore(drag,target);else bar.appendChild(drag);
+     });
+     btn.addEventListener('pointerup',e=>{clear();if(drag===btn){btn.classList.remove('dragging');drag=null;saveNavOrder([...$('.bottom').querySelectorAll('button')].map(x=>x.dataset.view));applyNavOrder();toast('تم حفظ ترتيب الأقسام');}});
+     btn.addEventListener('pointercancel',()=>{clear();if(drag===btn){btn.classList.remove('dragging');drag=null}});
+     btn.addEventListener('click',e=>{if(moved){e.preventDefault();e.stopPropagation();moved=false}},true);
+   });
+ });
+}
+
+
+function nav(view){
+ currentView=view;$$('.view').forEach(x=>x.classList.toggle('active',x.id==='view-'+view));
+ $$('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===view));
+ $$('.bottom button').forEach(x=>x.classList.toggle('active',x.dataset.view===view));
+ renderCurrent();
+}
+function renderCurrent(){updateStats();if(currentView==='home')renderHome();if(currentView==='videos')renderVideos();if(currentView==='images')renderImages();if(currentView==='folders')renderFolders();if(currentView==='favorites')renderFavorites();if(currentView==='trash')renderTrash();if(currentView==='storage')renderStorage();updateFolderFilters()}
+async function updateStats(){
+ const m=await allMedia(),f=await allFolders(),active=m.filter(x=>!x.deleted),trash=m.filter(x=>x.deleted);
+ $('#stVideos').textContent=active.filter(x=>x.mediaType==='video').length;$('#stImages').textContent=active.filter(x=>x.mediaType==='image').length;$('#sideMediaCount').textContent=active.length;const totalSize=active.reduce((a,x)=>a+(x.size||0),0);const lim=(settings.storageLimit||0);$('#sideProgress').style.width=(lim?Math.min(100,totalSize/lim*100):0)+'%';
+ $('#stFolders').textContent=f.length;$('#stFav').textContent=active.filter(x=>x.favorite).length;$('#stTrash').textContent=trash.length;
+ refreshStorage();
+}
+
+function getStorageLimit(){try{return Number(localStorage.vhStorageLimit||0)||0}catch{return 0}}
+function bytesFromUnit(value,unit){const n=Number(value)||0;const units={B:1,KB:1024,MB:1024**2,GB:1024**3,TB:1024**4};return n*(units[unit]||1)}
+function storageLimitLabel(bytes){return bytes?fmtBytes(bytes):'لم يتم تحديدها'}
+function setStorageLimitUI(bytes){
+ const ids=['storageQuotaBig','homeStorageQuota'];ids.forEach(id=>{const e=$('#'+id);if(e)e.textContent=bytes?'السعة المحددة: '+fmtBytes(bytes):'السعة المحددة: لم يتم تحديدها'});
+ const home=$('#homeStorageLimitInput'),homeUnit=$('#homeStorageLimitUnit'),main=$('#storageLimitInput'),unit=$('#storageLimitUnit');
+ if(bytes){
+   let v=bytes,u='B';
+   if(bytes>=1024**4){v=bytes/1024**4;u='TB'}
+   else if(bytes>=1024**3){v=bytes/1024**3;u='GB'}
+   else if(bytes>=1024**2){v=bytes/1024**2;u='MB'}
+   else if(bytes>=1024){v=bytes/1024;u='KB'}
+   [home,main].forEach(e=>{if(e)e.value=Number(v.toFixed(v<10&&u!=='B'?2:0))});[homeUnit,unit].forEach(e=>{if(e)e.value=u});
+ } else {[home,main].forEach(e=>{if(e)e.value=''})}
+}
+function saveStorageLimit(){
+ const value=$('#storageLimitInput')?.value,unit=$('#storageLimitUnit')?.value,bytes=bytesFromUnit(value,unit);
+ if(!bytes)return toast('أدخل سعة التخزين أولًا'); localStorage.vhStorageLimit=String(bytes);toast('تم حفظ السعة المحددة');refreshStorage();
+}
+function saveStorageLimitFromHome(){
+ const value=$('#homeStorageLimitInput')?.value,unit=$('#homeStorageLimitUnit')?.value,bytes=bytesFromUnit(value,unit);
+ if(!bytes)return toast('أدخل سعة التخزين أولًا'); localStorage.vhStorageLimit=String(bytes);toast('تم حفظ السعة المحددة');refreshStorage();
+}
+function clearStorageLimit(){localStorage.removeItem('vhStorageLimit');toast('تم إلغاء تحديد السعة');refreshStorage()}
+async function getStorageStats(){
+ const m=await allMedia();
+ const active=m.filter(x=>!x.deleted);
+ const used=active.reduce((a,x)=>a+(x.size||0),0);
+ const limit=getStorageLimit();
+ return {m,active,used,limit};
+}
+async function refreshStorage(){
+ try{
+  const s=await getStorageStats(),pct=s.limit?Math.min(100,(s.used/s.limit)*100):0,free=s.limit?Math.max(0,s.limit-s.used):0;
+  const set=(id,v)=>{const e=$('#'+id);if(e)e.textContent=v};
+  const bar=(id,v)=>{const e=$('#'+id);if(e)e.style.width=v+'%'};
+  setStorageLimitUI(s.limit);
+  set('homeStorageUsed',fmtBytes(s.used));set('homeStorageQuota',s.limit?'السعة المحددة: '+fmtBytes(s.limit):'السعة المحددة: لم يتم تحديدها');bar('homeStorageBar',pct);set('homeStoragePercent',s.limit?pct.toFixed(1)+'% مستخدم':'لم تحدد السعة');set('homeStorageFree',s.limit?'المتبقي: '+fmtBytes(free):'المتبقي: —');
+  set('storageUsedBig',fmtBytes(s.used));set('storageQuotaBig',s.limit?'السعة المحددة: '+fmtBytes(s.limit):'السعة المحددة: لم يتم تحديدها');bar('storageMainBar',pct);set('storagePercentBig',s.limit?pct.toFixed(1)+'% مستخدم':'لم تحدد السعة');set('storageFreeBig',s.limit?'المتبقي: '+fmtBytes(free):'المتبقي: —');
+ }catch(e){console.error(e);toast('تعذر حساب مساحة التخزين')}
+}
+async function renderStorage(){await refreshStorage()}
+
+async function addLocal(type,forcedFolder=null){
+ if(type==='video' && forcedFolder===null){await openVideoFolderPicker();return}
+ const input=$('#fileInput');input.accept=type==='video'?'video/*':'image/*';input.onchange=async()=>{const files=[...input.files];if(files.length)await importFiles(files,type,forcedFolder);input.value=''};input.click()
+}
+function setImportProgress(done,total,title,note){
+ const box=$('#importProgress');if(!box)return;
+ const pct=total?Math.round(done/total*100):0;
+ $('#importProgressTitle').textContent=title||'جاري إضافة الملفات';
+ $('#importProgressCount').textContent=pct+'%';
+ $('#importProgressBar').style.width=pct+'%';
+ $('#importProgressNote').textContent=note||'';
+ box.classList.add('show');
+}
+function finishImportProgress(msg='اكتملت الإضافة'){
+ const box=$('#importProgress');if(!box)return;
+ $('#importProgressTitle').textContent=msg;$('#importProgressCount').textContent='100%';$('#importProgressBar').style.width='100%';
+ setTimeout(()=>box.classList.remove('show'),1200);
+}
+async function importFiles(files,type,folderId=null){
+ const list=[...files].filter(Boolean);
+ if(!list.length)return;
+ const now=Date.now();
+ const records=list.map((file,i)=>({id:uid(),mediaType:type,name:file.name,type:'local',blob:file,url:'',size:file.size,mime:file.type,date:now+i,favorite:false,deleted:false,folderId:type==='video'?folderId:null,color:null,position:i,completed:false,thumbnail:null}));
+ // Make the new items visible immediately. Thumbnail generation and persistence continue in the background.
+ pendingMedia.push(...records);
+ if(currentView!=='videos'&&currentView!=='images'&&type==='video')nav('videos');
+ else renderCurrent();
+ setImportProgress(0,list.length,'تمت إضافة الملفات إلى المكتبة','جاري حفظ الملفات في التخزين المحلي...');
+ try{
+   await putMediaBatch(records);
+   const ids=new Set(records.map(x=>x.id));pendingMedia=pendingMedia.filter(x=>!ids.has(x.id));
+   renderCurrent();
+ }catch(e){
+   console.error(e);pendingMedia=pendingMedia.filter(x=>!records.includes(x));renderCurrent();finishImportProgress('تعذر حفظ بعض الملفات');toast('تعذر حفظ الملفات في التخزين المحلي');return;
+ }
+ if(type==='video'){
+   // Generate thumbnails without blocking the initial appearance of the videos.
+   for(let i=0;i<records.length;i++){
+     const rec=records[i];
+     setImportProgress(i,records.length,'الملفات ظاهرة — معالجة الصور المصغرة',`تمت إضافة ${records.length} فيديو. تجهيز الصورة المصغرة ${i+1} من ${records.length}...`);
+     try{
+       const thumb=await makeThumb(rec.blob);
+       if(thumb){rec.thumbnail=thumb;await putMedia(rec);}
+     }catch(e){console.warn('thumbnail failed',rec.name,e)}
+     if(i%4===0)renderCurrent();
+     await new Promise(r=>setTimeout(r,0));
+   }
+   renderCurrent();
+   finishImportProgress(folderId?'تمت إضافة الفيديوهات إلى المجلد':'تمت إضافة الفيديوهات بنجاح');
+ }else{
+   setImportProgress(list.length,list.length,'تمت إضافة الصور','تم حفظ الصور في المكتبة.');
+   renderCurrent();
+   finishImportProgress('تمت إضافة الصور بنجاح');
+ }
+ toast(folderId?'تمت إضافة الفيديوهات إلى المجلد مباشرة':'تمت إضافة الملفات بنجاح');
+}
+async function openVideoFolderPicker(){
+ const fs=await allFolders();
+ const current=currentVideoFolder||'';
+ $('#videoFolderPickerList').innerHTML=`<button class="folder-picker-item ${!current?'active':''}" onclick="selectVideoFolderForAdd(null)"><div class="folder-icon">📚</div><b>كل الفيديوهات</b><small>بدون مجلد</small></button>`+(fs.length?fs.map(f=>`<button class="folder-picker-item ${current===f.id?'active':''}" onclick="selectVideoFolderForAdd('${f.id}')"><div class="folder-icon"><i class="fa-solid fa-folder"></i></div><b>${esc(f.name)}</b><small>إضافة مباشرة إلى المجلد</small></button>`).join(''):`<div class="empty" style="grid-column:1/-1">لا توجد مجلدات بعد.</div>`);
+ openModal('videoFolderPicker');
+}
+function selectVideoFolderForAdd(folderId){closeModal('videoFolderPicker');addLocal('video',folderId)}
+function chooseNewFolderForVideo(){closeModal('videoFolderPicker');createFolder();toast('أنشئ المجلد ثم اختره عند إضافة الفيديوهات')}
+async function importVideoFolderFromFiles(){
+ closeModal('videoFolderPicker');
+ const input=$('#folderInput');
+ input.value='';
+ input.onchange=async()=>{
+   const files=[...input.files].filter(f=>f.type.startsWith('video/'));
+   if(!files.length){toast('لم يتم العثور على فيديوهات داخل المجلد');return}
+   const firstPath=files[0].webkitRelativePath||'';
+   const root=(firstPath.split('/')[0]||'مجلد الفيديوهات').trim();
+   const name=prompt('اسم المجلد داخل البرنامج',root)||root;
+   const folderId=uid();
+   await putFolder({id:folderId,name:name.trim()||root,date:Date.now()});
+   await importFiles(files,'video',folderId);
+   currentVideoFolder=folderId;
+   toast(`تم استيراد ${files.length} فيديو إلى مجلد ${name.trim()||root}`);
+   input.value='';
+ };
+ input.click();
+}
+function makeThumb(file){
+ return new Promise(resolve=>{
+  const v=document.createElement('video');v.muted=true;v.playsInline=true;v.preload='metadata';v.src=URL.createObjectURL(file);
+  const finish=x=>{URL.revokeObjectURL(v.src);resolve(x)};
+  v.onloadeddata=()=>{try{v.currentTime=Math.min(1,(v.duration||2)/3)}catch{finish(null)}};
+  v.onseeked=()=>{try{const c=$('#canvas'),w=Math.min(480,v.videoWidth||320),h=Math.round(w*((v.videoHeight||180)/(v.videoWidth||320)));c.width=w;c.height=h;c.getContext('2d').drawImage(v,0,0,w,h);c.toBlob(b=>finish(b),'image/jpeg',.72)}catch{finish(null)}};
+  v.onerror=()=>finish(null);setTimeout(()=>finish(null),7000);
+ })
+}
+function mediaUrl(x){return x.blob?URL.createObjectURL(x.blob):x.url}
+function thumbUrl(x){return x.thumbnail?URL.createObjectURL(x.thumbnail):(x.mediaType==='image'?mediaUrl(x):'')}
+
+function card(x,trash=false){
+ const remote=!!x.remote;
+ const url=mediaUrl(x),thumb=thumbUrl(x), checked=selected.has(x.id);
+ let visual=x.mediaType==='video'?(thumb?`<img src="${thumb}">`:`<div style="height:100%;display:grid;place-items:center;color:var(--p2);font-size:35px"><i class="fa-solid fa-file-video"></i></div>`):`<img src="${url}">`;
+ const openAction=remote?(x.mediaType==='video'?`openRemoteStream('${x.remoteId||x.id}')`:`requestRemoteFile('${x.remoteId||x.id}')`):(x.mediaType==='video'?`openVideo('${x.id}')`:`openImage('${x.id}')`);
+ return `<article class="media-card ${remote?'remote-item':''}"><div class="thumb" onclick="${trash?'':openAction}">
+ ${visual}<div class="shade"></div>${x.mediaType==='video'&&!trash&&!remote?'<div class="play"><i class="fa-solid fa-play"></i></div>':''}
+ ${remote?'<div class="play" style="background:rgba(24,200,255,.92)"><i class="fa-solid fa-play"></i></div>':''}
+ ${selectMode&&!trash&&!remote?`<label class="pick" onclick="event.stopPropagation()"><input type="checkbox" ${checked?'checked':''} onchange="selectItem('${x.id}',this.checked)"></label>`:''}
+ ${x.color?`<span class="color-dot" style="background:${colors[x.color]||x.color}"></span>`:''}
+ <span class="badge">${remote?'📡 بعيد':x.type==='url'?'🔗 رابط':x.mediaType==='image'?'صورة':'فيديو'}</span></div>
+ <div class="meta"><b title="${esc(x.name)}">${esc(x.name)}</b><small>${x.size?fmtBytes(x.size):'حجم غير متاح'}${x.folderName?' • '+esc(x.folderName):(!remote&&x.folderId?' • '+esc(folderName(x.folderId)):'')}</small>
+ <div class="meta-actions">${trash?`<button class="mini" title="استعادة" onclick="restore('${x.id}')"><i class="fa-solid fa-rotate-left"></i><span>استعادة</span></button><button class="mini danger" title="حذف نهائي" onclick="permanentDelete('${x.id}')"><i class="fa-solid fa-trash-can"></i><span>حذف نهائي</span></button>`:remote?`<button class="mini primary" title="فتح مباشرة من الهاتف" onclick="${x.mediaType==='video'?`openRemoteStream('${x.remoteId||x.id}')`:`requestRemoteFile('${x.remoteId||x.id}')`}"><i class="fa-solid fa-play"></i><span>فتح مباشر</span></button><button class="mini" title="تنزيل إلى مكتبة الكمبيوتر" onclick="saveRemoteToLaptop('${x.remoteId||x.id}')"><i class="fa-solid fa-download"></i><span>تنزيل للابتوب</span></button><button class="mini" title="نقل إلى مجلد في الكمبيوتر" onclick="chooseRemoteFolder('${x.remoteId||x.id}')"><i class="fa-solid fa-folder-tree"></i><span>نقل لمجلد</span></button><button class="mini" title="التفاصيل" onclick="showInfo('${x.id}')"><i class="fa-solid fa-circle-info"></i><span>تفاصيل</span></button>`:`<button class="mini" title="المفضلة" onclick="toggleFav('${x.id}')"><i class="fa-${x.favorite?'solid':'regular'} fa-star"></i><span>مفضلة</span></button><button class="mini" title="نقل إلى مجلد" onclick="openMove('${x.id}')"><i class="fa-solid fa-folder-tree"></i><span>نقل</span></button><button class="mini" title="التفاصيل" onclick="showInfo('${x.id}')"><i class="fa-solid fa-circle-info"></i><span>تفاصيل</span></button><button class="mini danger" title="حذف" onclick="softDelete('${x.id}')"><i class="fa-solid fa-trash-can"></i><span>حذف</span></button>`}</div></div></article>`
+}
+function folderName(id){return (window._folders||[]).find(f=>f.id===id)?.name||'مجلد'}
+async function renderHome(){const m=(await allMedia()).filter(x=>!x.deleted).sort((a,b)=>b.date-a.date).slice(0,10);$('#recentGrid').innerHTML=m.length?m.map(x=>card(x)).join(''):`<div class="empty"><i class="fa-solid fa-photo-film"></i>لا توجد ملفات بعد. أضف أول فيديو أو صورة.</div>`}
+async function renderVideos(){
+ let m=(await allMedia()).filter(x=>!x.deleted&&x.mediaType==='video');const q=$('#search').value.trim().toLowerCase();
+ if(videoFilter==='local')m=m.filter(x=>x.type==='local');if(videoFilter==='url')m=m.filter(x=>x.type==='url');if(videoFilter==='fav')m=m.filter(x=>x.favorite);
+ const folderValue=$('#folderFilter').value||currentVideoFolder||'';if(folderValue)m=m.filter(x=>x.folderId===folderValue);if(q)m=m.filter(x=>x.name.toLowerCase().includes(q));
+ const s=$('#sort').value;m.sort((a,b)=>s==='name'?a.name.localeCompare(b.name,'ar'):s==='size'?(b.size||0)-(a.size||0):s==='old'?a.date-b.date:b.date-a.date);
+ $('#videoGrid').innerHTML=m.length?m.map(x=>card(x)).join(''):`<div class="empty"><i class="fa-solid fa-film"></i>${folderValue?'هذا المجلد لا يحتوي على فيديوهات بعد.':'لا توجد فيديوهات مطابقة.'}</div>`;updateBulk();await renderVideoFolderBrowser(folderValue);
+}
+async function renderVideoFolderBrowser(activeId=''){
+ const fs=await allFolders(),all=(await allMedia()).filter(x=>!x.deleted&&x.mediaType==='video');
+ const el=$('#videoFolderBrowser');if(!el)return;
+ const cards=[];
+ cards.push(`<button class="video-folder-item ${!activeId?'active':''}" onclick="openVideoFolder(null)"><div class="folder-icon"><i class="fa-solid fa-film"></i></div><b>كل الفيديوهات</b><small>${all.length} فيديو</small></button>`);
+ for(const f of fs){
+   const count=all.filter(x=>x.folderId===f.id).length;
+   cards.push(`<button class="video-folder-item ${activeId===f.id?'active':''}" onclick="openVideoFolder('${f.id}')"><div class="folder-icon"><i class="fa-solid fa-folder"></i></div><b title="${esc(f.name)}">${esc(f.name)}</b><small>${count} فيديو</small></button>`);
+ }
+ if(!fs.length) cards.push(`<div class="video-folder-empty"><i class="fa-solid fa-folder-plus"></i><br>أنشئ مجلدًا أولًا، ثم أضف الفيديوهات إليه.</div>`);
+ el.innerHTML=cards.join('');
+ const f=fs.find(x=>x.id===activeId);
+ $('#videoFolderCrumb').textContent=f?`الفيديوهات ← ${f.name}`:'كل الفيديوهات';
+}
+
+function openVideoFolder(id){currentVideoFolder=id||null;const e=$('#folderFilter');if(e)e.value=id||'';renderVideos()}
+async function renderImages(){
+ let m=(await allMedia()).filter(x=>!x.deleted&&x.mediaType==='image'),q=$('#search').value.trim().toLowerCase();
+ if($('#imageFolderFilter').value)m=m.filter(x=>x.folderId===$('#imageFolderFilter').value);if($('#imageColorFilter').value)m=m.filter(x=>x.color===$('#imageColorFilter').value);if(q)m=m.filter(x=>x.name.toLowerCase().includes(q));
+ m.sort((a,b)=>b.date-a.date);$('#imageGrid').innerHTML=m.length?m.map(x=>card(x)).join(''):`<div class="empty"><i class="fa-solid fa-image"></i>لا توجد صور مطابقة.</div>`
+}
+async function renderFolders(){
+ const fs=await allFolders();window._folders=fs;const m=(await allMedia()).filter(x=>!x.deleted);
+ $('#folderGrid').innerHTML=fs.length?fs.map(f=>`<div class="folder"><div class="folder-head"><div><div class="folder-icon"><i class="fa-solid fa-folder"></i></div><b>${esc(f.name)}</b><small>${m.filter(x=>x.folderId===f.id).length} ملف</small></div></div><div class="folder-actions"><button class="btn" onclick="openFolder('${f.id}')"><i class="fa-solid fa-folder-open"></i><span>فتح</span></button><button class="mini danger" onclick="removeFolder('${f.id}')"><i class="fa-solid fa-trash-can"></i><span>حذف</span></button></div></div>`).join(''):`<div class="empty"><i class="fa-solid fa-folder-open"></i>لم تنشئ أي مجلد بعد.</div>`
+}
+async function renderFavorites(){const m=(await allMedia()).filter(x=>!x.deleted&&x.favorite);$('#favGrid').innerHTML=m.length?m.map(x=>card(x)).join(''):`<div class="empty"><i class="fa-solid fa-star"></i>لا توجد عناصر في المفضلة.</div>`}
+async function renderTrash(){const m=(await allMedia()).filter(x=>x.deleted);$('#trashGrid').innerHTML=m.length?m.map(x=>card(x,true)).join(''):`<div class="empty"><i class="fa-solid fa-trash-can"></i>السلة فارغة.</div>`}
+async function updateFolderFilters(){const fs=await allFolders();window._folders=fs;for(const id of ['folderFilter','imageFolderFilter']){const e=$('#'+id),val=e.value;e.innerHTML='<option value="">كل المجلدات</option>'+fs.map(f=>`<option value="${f.id}">${esc(f.name)}</option>`).join('');e.value=fs.some(f=>f.id===val)?val:''}}
+function setVideoFilter(f,el){videoFilter=f;$$('.tabs .tab').forEach(x=>x.classList.remove('active'));el.classList.add('active');renderVideos()}
+function selectItem(id,on){on?selected.add(id):selected.delete(id);updateBulk();renderVideos()}
+function toggleSelectMode(){selectMode=!selectMode;if(!selectMode)selected.clear();$('#selectBtn').textContent=selectMode?'☑ إيقاف التحديد':'☑ تحديد متعدد';renderVideos()}
+function updateBulk(){$('#bulk').classList.toggle('show',selectMode&&selected.size>0);$('#bulkCount').textContent=selected.size+' محدد'}
+async function toggleFav(id){const x=(await allMedia()).find(x=>x.id===id);if(x){x.favorite=!x.favorite;await putMedia(x);renderCurrent();toast(x.favorite?'تمت الإضافة للمفضلة':'تمت الإزالة من المفضلة')}}
+async function softDelete(id){if(settings.confirmDelete&&!confirm('هل تريد نقل الملف إلى سلة المحذوفات؟'))return;const x=(await allMedia()).find(x=>x.id===id);if(x){x.deleted=true;await putMedia(x);renderCurrent();toast('تم نقل الملف إلى السلة')}}
+async function restore(id){const x=(await allMedia()).find(x=>x.id===id);if(x){x.deleted=false;await putMedia(x);renderTrash();updateStats()}}
+async function permanentDelete(id){if(!confirm('حذف نهائي؟ لا يمكن التراجع عن هذا الإجراء.'))return;await delMedia(id);renderTrash();updateStats()}
+async function emptyTrash(){const m=(await allMedia()).filter(x=>x.deleted);if(!m.length)return;if(!confirm('حذف جميع عناصر السلة نهائيًا؟'))return;for(const x of m)await delMedia(x.id);renderTrash();updateStats();toast('تم تفريغ السلة')}
+async function openTrash(){nav('trash')}
+async function createFolder(){openModal('folderModal');setTimeout(()=>$('#folderName').focus(),50)}
+async function saveFolder(){const name=$('#folderName').value.trim();if(!name)return toast('اكتب اسم المجلد');await putFolder({id:uid(),name,date:Date.now()});$('#folderName').value='';closeModal('folderModal');renderCurrent();toast('تم إنشاء المجلد')}
+async function removeFolder(id){if(!confirm('حذف المجلد؟ الملفات داخله لن تُحذف.'))return;const m=await allMedia();for(const x of m)if(x.folderId===id){x.folderId=null;await putMedia(x)}await delFolder(id);renderCurrent()}
+async function openFolder(id){currentVideoFolder=id;nav('videos');setTimeout(()=>{$('#folderFilter').value=id;renderVideos()},0)}
+async function openMove(id){currentFolderForMove=id;const fs=await allFolders();$('#moveList').innerHTML=`<button class="folder" onclick="moveTo(null)"><div class="folder-icon">🚫</div><b>بدون مجلد</b></button>`+fs.map(f=>`<button class="folder" onclick="moveTo('${f.id}')"><div class="folder-icon"><i class="fa-solid fa-folder"></i></div><b>${esc(f.name)}</b></button>`).join('');openModal('moveModal')}
+async function moveTo(folderId){const ids=currentFolderForMove?[currentFolderForMove]:[...selected];const m=await allMedia();for(const x of m)if(ids.includes(x.id)){x.folderId=folderId;await putMedia(x)}closeModal('moveModal');renderCurrent();toast('تم النقل')}
+async function bulkFavorite(){const m=await allMedia();for(const x of m)if(selected.has(x.id)){x.favorite=true;await putMedia(x)}toast('تمت إضافة المحدد إلى المفضلة');toggleSelectMode()}
+async function bulkMove(){if(!selected.size)return;currentFolderForMove=null;const fs=await allFolders();$('#moveList').innerHTML=`<button class="folder" onclick="moveSelectedTo(null)"><div class="folder-icon">🚫</div><b>بدون مجلد</b></button>`+fs.map(f=>`<button class="folder" onclick="moveSelectedTo('${f.id}')"><div class="folder-icon"><i class="fa-solid fa-folder"></i></div><b>${esc(f.name)}</b></button>`).join('');openModal('moveModal')}
+async function moveSelectedTo(folderId){const m=await allMedia();for(const x of m)if(selected.has(x.id)){x.folderId=folderId;await putMedia(x)}closeModal('moveModal');toggleSelectMode();renderCurrent();toast('تم نقل الملفات')}
+async function bulkDelete(){if(!selected.size)return;if(settings.confirmDelete&&!confirm('نقل الملفات المحددة إلى السلة؟'))return;const m=await allMedia();for(const x of m)if(selected.has(x.id)){x.deleted=true;await putMedia(x)}toggleSelectMode();renderCurrent();toast('تم نقل الملفات للسلة')}
+async function bulkSend(){if(!conn?.open)return toast('اتصل بجهاز أولًا من قسم الاقتران');const m=await allMedia();for(const x of m)if(selected.has(x.id)&&x.blob)await sendFile(x);toast('بدأ إرسال الملفات')}
+function openUrlModal(){openModal('urlModal');setTimeout(()=>$('#urlInput').focus(),50)}
+async function saveUrl(){const url=$('#urlInput').value.trim(),name=$('#urlName').value.trim()||'فيديو من رابط';if(!/^https?:\/\//i.test(url))return toast('أدخل رابطًا يبدأ بـ http أو https');await putMedia({id:uid(),mediaType:'video',name,type:'url',url,size:0,mime:'video/mp4',date:Date.now(),favorite:false,deleted:false,folderId:null,color:null,position:0,completed:false,thumbnail:null});$('#urlInput').value='';$('#urlName').value='';closeModal('urlModal');nav('videos');toast('تمت إضافة الرابط')}
+async function openVideo(id){const x=(await allMedia()).find(x=>x.id===id);if(!x)return;currentItem=x;$('#playerTitle').textContent=x.name;$('#playerInfo').textContent=(x.type==='local'?'📱 فيديو محلي':'🔗 فيديو من رابط')+' • '+(x.size?fmtBytes(x.size):'حجم غير متاح');$('#playerFav').textContent=x.favorite?'★ مفضلة':'☆ مفضلة';const p=$('#player');p.src=mediaUrl(x);p.currentTime=0;$('#resume').style.display='none';openModal('playerModal');if(settings.resume&&x.position>2&&!x.completed){$('#resumeText').textContent='لديك مشاهدة سابقة عند '+fmtTime(x.position);$('#resume').style.display='flex'}else if(settings.autoplay)p.play().catch(()=>{})}
+function resumeYes(){$('#resume').style.display='none';$('#player').currentTime=currentItem.position||0;$('#player').play().catch(()=>{})}
+function resumeNo(){$('#resume').style.display='none';$('#player').currentTime=0;$('#player').play().catch(()=>{})}
+async function closePlayer(){const p=$('#player');if(remoteSession&&currentItem?.remote){sendPeer({type:'remote-control',action:'pause',value:p.currentTime||0});try{activeRemoteCall?.close()}catch{}activeRemoteCall=null;p.pause();p.srcObject=null;p.removeAttribute('src');p.load();closeModal('playerModal');return}if(currentItem){currentItem.position=p.currentTime||0;currentItem.completed=!!(p.duration&&p.currentTime>p.duration-3);await putMedia(currentItem)}p.pause();p.removeAttribute('src');p.srcObject=null;p.load();closeModal('playerModal')}
+function seek(s){const p=$('#player');p.currentTime=Math.max(0,Math.min(p.duration||1,p.currentTime+s))}
+async function togglePip(){try{if(document.pictureInPictureElement)await document.exitPictureInPicture();else await $('#player').requestPictureInPicture()}catch{}}
+function fullscreen(){const p=$('#player');(p.requestFullscreen||p.webkitRequestFullscreen)?.call(p)}
+async function playerFavorite(){if(currentItem){currentItem.favorite=!currentItem.favorite;await putMedia(currentItem);$('#playerFav').textContent=currentItem.favorite?'★ مفضلة':'☆ مفضلة';updateStats()}}
+async function showCurrentInfo(){if(currentItem)showInfo(currentItem.id)}
+async function openImage(id){const x=(await allMedia()).find(x=>x.id===id);if(!x)return;currentImage=x;imageRotation=0;$('#imageViewer').src=mediaUrl(x);$('#imageViewer').style.transform='rotate(0deg)';$('#imageTitle').textContent=x.name;openModal('imageModal')}
+function rotateImage(n){imageRotation+=n;$('#imageViewer').style.transform=`rotate(${imageRotation}deg)`}
+async function imageFavorite(){if(currentImage){await toggleFav(currentImage.id);currentImage.favorite=!currentImage.favorite}}
+async function showInfo(id){const x=id?(await allMedia()).find(x=>x.id===id):null;if(!x)return;$('#infoBody').innerHTML=`<b>${esc(x.name)}</b><br>النوع: ${x.mediaType==='video'?'فيديو':'صورة'}<br>المصدر: ${x.type==='local'?'ملف محلي':'رابط'}<br>الحجم: ${x.size?fmtBytes(x.size):'غير متاح'}<br>المفضلة: ${x.favorite?'نعم':'لا'}<br>المجلد: ${x.folderId?esc(folderName(x.folderId)):'بدون مجلد'}<br>تاريخ الإضافة: ${new Date(x.date).toLocaleString('ar')}`;openModal('infoModal')}
+function showCurrentInfo(){showInfo(currentItem?.id)}
+
+function openColorFilter(){openModal('colorModal');const active=$('#imageColorFilter').value;$('#colorOptions').innerHTML=Object.entries(colors).map(([k,c])=>`<button class="color-option ${active===k?'active':''}" style="background:${c}" onclick="filterColor('${k}')">${k}</button>`).join('')}
+function filterColor(c){$('#imageColorFilter').value=c;closeModal('colorModal');renderImages()}
+async function setImageColor(color){if(!currentImage&&selected.size===0)return;const m=await allMedia();const ids=currentImage?[currentImage.id]:[...selected];for(const x of m)if(ids.includes(x.id)){x.color=color;await putMedia(x)}closeModal('colorModal');if(currentImage){currentImage.color=color;toast('تم تغيير لون الصورة')}else{toast('تم تطبيق اللون على المحدد');toggleSelectMode()}renderCurrent()}
+
+function peerReady(){return !!(conn&&conn.open)}
+function sendPeer(msg){if(!peerReady())return false;try{conn.send(msg);return true}catch(e){console.error(e);return false}}
+async function buildLibraryCatalog(){
+ const raw=(await localAllMedia()).filter(x=>!x.deleted&&!x.remote);
+ const media=[];
+ for(const x of raw){
+   let thumbnailData=null;
+   try{ if(x.thumbnail) thumbnailData=await blobToDataURL(x.thumbnail); }catch{}
+   media.push({id:x.id,mediaType:x.mediaType,name:x.name,type:x.type,size:x.size||0,mime:x.mime||'',date:x.date||Date.now(),favorite:!!x.favorite,folderId:x.folderId||null,color:x.color||null,position:x.position||0,completed:!!x.completed,url:x.type==='url'?(x.url||''):'',thumbnailData});
+ }
+ const folders=await localAllFolders();
+ return {media,folders};
+}
+function openPhoneInterface(){
+  const url=location.href.split('#')[0]+'#mobile-interface';
+  const w=window.open(url,'VideoHubProPhoneInterface','width=460,height=900,resizable=yes,scrollbars=yes');
+  if(!w){
+    location.hash='mobile-interface';
+    applyPhoneInterfaceMode();
+  }
+}
+function applyPhoneInterfaceMode(){
+  const active=location.hash==='#mobile-interface';
+  document.body.classList.toggle('phone-interface-mode',active);
+}
+async function syncAndOpenPhoneInterface(){
+ if(!peerReady())return toast('أكمل الاقتران أولًا');
+ await syncLibrary();
+ openRemoteFullApp();
+}
+function openRemoteFullApp(){
+ if(!peerReady())return toast('أكمل الاقتران أولًا');
+ enterRemoteSession(true);
+}
+function enterRemoteSession(persist=true){
+ if(!conn?.open)return;
+ remoteSourceId=conn.peer||'peer';
+ remoteSession=true;
+ remotePersistent=!!persist;
+ if(persist){
+   localStorage.setItem('vhRemoteMode','1');
+   localStorage.setItem('vhRemotePeerId',remoteSourceId);
+ }
+ remoteCatalogCache=null;
+ remoteFolders=[];
+ remotePrefetchQueue=[];
+ remotePrefetchPending.clear();
+ remotePrefetchBusy=false;
+ pendingMedia=pendingMedia.filter(x=>!x.remote);
+ document.body.classList.add('remote-session');
+ closeAllLocalOverlays();
+ nav('home');
+ sendPeer({type:'catalog-request',targetSource:remoteSourceId,requestId:uid()});
+}
+function closeRemoteSession(msg){
+ localStorage.removeItem('vhRemoteMode');
+ localStorage.removeItem('vhRemotePeerId');
+ remotePersistent=false;
+ try{activeRemoteCall?.close()}catch{} activeRemoteCall=null; if(remoteStreamVideo){try{remoteStreamVideo.pause();URL.revokeObjectURL(remoteStreamVideo.src);remoteStreamVideo.remove()}catch{}remoteStreamVideo=null;} remoteStreamSource=null;
+ remoteSession=false;
+ remoteSourceId='';
+ remoteFolders=[];
+ remoteCatalogCache=null;
+ remotePrefetchQueue=[];
+ remotePrefetchPending.clear();
+ remotePrefetchBusy=false;
+ remotePrefetchCurrentId='';
+ clearTimeout(window.remotePrefetchTimeout);
+ window.remoteOpenAfterLoad=null;
+ pendingMedia=pendingMedia.filter(x=>!x.remote);
+ document.body.classList.remove('remote-session');
+ closeAllLocalOverlays();
+ nav('home');
+ if(msg)toast(msg);
+}
+function closeAllLocalOverlays(){['addModal','urlModal','folderModal','videoFolderPicker','moveModal','colorModal','playerModal','imageModal','infoModal','trashModal'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('show')});}
+async function syncLibrary(){
+ if(!peerReady())return toast('أكمل الاقتران أولًا');
+ if(remoteSession){
+   sendPeer({type:'catalog-request',targetSource:conn.peer||'peer',requestId:uid()});
+   toast('جاري تحديث محتوى الجهاز المقترن');
+   return;
+ }
+ const catalog=await buildLibraryCatalog();
+ sendPeer({type:'catalog',sourceId:peer?.id||conn.peer||'peer',catalog});
+ $('#syncStatus').textContent=`تم إرسال فهرس المكتبة: ${catalog.media.length} ملف و${catalog.folders.length} مجلد.`;
+}
+function createPair(){if(!window.Peer)return toast('تعذر تحميل خدمة الاقتران');destroyPeer();pairCode=String(crypto.getRandomValues(new Uint32Array(1))[0]%900000+100000);localStorage.setItem('vhPairRole','host');localStorage.setItem('vhPairCode',pairCode);$('#pairCode').textContent=pairCode;$('#pairStatus').innerHTML='جاري إنشاء قناة الاتصال...';peer=new Peer('vhpro-'+pairCode,{host:'0.peerjs.com',port:443,path:'/',secure:true,debug:0});bindPeerCalls();peer.on('open',()=>{$('#pairStatus').innerHTML='<span class="ok">✓ الرمز جاهز. أدخله في الجهاز الآخر.</span>';startPairExpiry()});peer.on('connection',c=>{conn=c;bindPeerConnection(c,'الجهاز الآخر')});peer.on('error',e=>$('#pairStatus').textContent='خطأ في الاتصال: '+(e.type||e.message))}
+function bindPeerCalls(){
+ if(!peer||peer.__vhCallsBound)return;
+ peer.__vhCallsBound=true;
+ peer.on('call',call=>{
+   const kind=call.metadata?.kind;
+   if(kind!=='remote-stream'){try{call.answer()}catch{}return;}
+   try{call.answer()}catch{}
+   activeRemoteCall=call;
+   call.on('stream',stream=>{
+     if(!remoteSession)return;
+     const p=$('#player');
+     if(!p)return;
+     remoteStreamSource=stream;
+     p.pause();
+     p.removeAttribute('src');
+     p.srcObject=stream;
+     p.controls=true;
+     p.currentTime=0;
+     openModal('playerModal');
+     $('#resume').style.display='none';
+     $('#playerInfo').textContent='📡 تشغيل مباشر من الجهاز المقترن • لا يتم تنزيل الفيديو إلى الكمبيوتر';
+     p.play().catch(()=>{});
+   });
+   call.on('close',()=>{if(activeRemoteCall===call)activeRemoteCall=null;});
+   call.on('error',e=>{if(remoteSession)toast('تعذر تشغيل الفيديو مباشرة');console.error(e)});
+ });
+}
+
+function bindPeerConnection(c,label){
+ conn=c;
+ c.on('open',async()=>{addDevice(label);$('#pairStatus').innerHTML='<span class="ok">✓ تم اتصال الجهاز الآخر.</span>';$('#syncStatus').textContent='جاري مزامنة محتوى الجهازين...';if(localStorage.getItem('vhRemoteMode')==='1'){enterRemoteSession(true);}else{await syncLibrary();}});
+ c.on('data',onPeerData);
+ c.on('close',()=>{$('#devices').innerHTML='';$('#remoteLibraryActions').hidden=true;$('#pairStatus').textContent='تم فصل الجهاز الآخر.';$('#syncStatus').textContent='انقطع الاتصال.';if(remoteSession)closeRemoteSession('انقطع الاتصال، أغلقت نسخة الجهاز المقترن تلقائيًا');});
+ c.on('error',e=>{$('#pairStatus').textContent='خطأ في قناة الاتصال: '+(e.message||e.type||'غير معروف')});
+}
+function startPairExpiry(){clearTimeout(pairTimer);pairTimer=setTimeout(()=>{if(!conn){destroyPeer();$('#pairCode').textContent='— — — — — —';$('#pairStatus').textContent='انتهت صلاحية رمز الاقتران. أنشئ رمزًا جديدًا.'}},10*60*1000)}
+function renewPair(){createPair()}
+function copyPair(){if(!pairCode)return toast('أنشئ رمزًا أولًا');navigator.clipboard?.writeText(pairCode);toast('تم نسخ الرمز')}
+function joinPair(){const code=$('#joinCode').value.trim();if(!/^\d{6}$/.test(code))return toast('الرمز يجب أن يكون 6 أرقام');localStorage.setItem('vhPairRole','joiner');localStorage.setItem('vhPairCode',code);destroyPeer();$('#joinStatus').textContent='جاري الاتصال...';peer=new Peer(undefined,{host:'0.peerjs.com',port:443,path:'/',secure:true,debug:0});bindPeerCalls();peer.on('open',()=>{conn=peer.connect('vhpro-'+code,{reliable:true});bindPeerConnection(conn,'الجهاز المضيف');conn.on('open',()=>{$('#joinStatus').innerHTML='<span class="ok">✓ تم الاتصال بالجهاز الآخر.</span>'})});peer.on('error',e=>$('#joinStatus').textContent='خطأ: '+(e.type||e.message))}
+function addDevice(n){$('#devices').innerHTML=`<div class="device"><span>📱 ${esc(n)}</span><span class="ok-dot">● متصل</span></div>`;$('#remoteLibraryActions').hidden=false}
+function destroyPeer(){const wasRemote=remoteSession;try{conn?.close();peer?.destroy()}catch{}conn=null;peer=null;if(wasRemote)closeRemoteSession();}
+function removeRemoteCatalog(sourceId){
+ pendingMedia=pendingMedia.filter(x=>!(x.remote&&x.remoteSource===sourceId));
+ remoteFolders=remoteFolders.filter(f=>f.remoteSource!==sourceId);
+ if(remoteCatalogCache?.sourceId===sourceId)remoteCatalogCache=null;
+}
+function receiveCatalog(m){
+ const sourceId=m.sourceId||conn?.peer||'peer';
+ if(!m.catalog)return;
+ const folders=(m.catalog.folders||[]).map(f=>({...f,remote:true,remoteSource:sourceId}));
+ const media=(m.catalog.media||[]).map(x=>({...x,id:`remote:${sourceId}:${x.id}`,remote:true,remoteSource:sourceId,remoteId:x.id,type:x.type==='url'?'url':'remote',deleted:false,blob:null,url:x.url||'',thumbnail:dataURLToBlob(x.thumbnailData||null)}));
+ for(const f of folders){for(const x of media.filter(v=>v.folderId===f.id))x.folderName=f.name;}
+ removeRemoteCatalog(sourceId);
+ remoteFolders.push(...folders);
+ pendingMedia.push(...media);
+ remoteCatalogCache={sourceId,media,folders,receivedAt:Date.now()};
+ $('#syncStatus').textContent=`تم استلام محتوى الجهاز الآخر: ${media.length} ملف و${folders.length} مجلد.`;
+ if(remoteSession&&remoteSourceId===sourceId){
+   updateFolderFilters();
+   renderCurrent();
+   // لا ننقل الملفات عند فتح الواجهة. المحتوى يبقى على الهاتف ويُفتح عبر بث مباشر عند الضغط عليه.
+   toast(`تم تحميل محتوى الجهاز المقترن: ${media.length} ملف`);
+ }
+}
+async function queueRemotePrefetch(media){ return; }
+async function processRemotePrefetch(){ return; }
+function showTransferProgress(title,done,total,note){const box=$('#transferProgress');if(!box)return;const pct=total?Math.max(0,Math.min(100,Math.round(done/total*100))):0;$('#transferProgressTitle').textContent=title||'جاري النقل';$('#transferProgressCount').textContent=pct+'%';$('#transferProgressBar').style.width=pct+'%';$('#transferProgressNote').textContent=note||'';box.classList.add('show')}
+function hideTransferProgress(delay=900){setTimeout(()=>$('#transferProgress')?.classList.remove('show'),delay)}
+async function onPeerData(m){
+ if(!m)return;
+ if(m.type==='catalog-request'){
+   // الطلب يعني: أرسل مكتبتك المحلية الآن، حتى لو كان الطرف الآخر داخل وضع الجهاز المقترن.
+   const catalog=await buildLibraryCatalog();
+   sendPeer({type:'catalog',sourceId:peer?.id||conn?.peer||'peer',requestId:m.requestId||'',catalog});
+   return;
+ }
+ if(m.type==='catalog'){receiveCatalog(m);return}
+ if(m.type==='request-stream'){serveRemoteStream(m.id,m.requestId);return}
+ if(m.type==='remote-control'){handleRemoteControl(m);return}
+ if(m.type==='request-file'){serveRemoteFile(m.id,m.requestId||null);return}
+ if(m.type==='file-meta'){pendingTransfer=m;receiveChunksMap.set(m.transferId||'default',[]);receiveTransferBytes.set(m.transferId||'default',0);showTransferProgress('جاري استلام '+(m.name||'الملف'),0,m.size||0,'يتم استلام الملف من الجهاز الآخر...');$('#pairStatus').textContent='جاري استلام '+m.name+'...';return}
+ if(m.type==='transfer-progress'){updateTransferReceiveProgress(m);return}
+ if(m.type==='file-error'){showTransferProgress('فشل النقل',0,1,m.error||'تعذر نقل الملف');hideTransferProgress(2200);toast('تعذر نقل الملف');return}
+ if(m.type==='file'){receiveFile(m);return}
+}
+let pendingTransfer=null;
+const receiveChunksMap=new Map();
+const receiveTransferBytes=new Map();
+async function waitPeerBuffer(){const dc=conn?._dc;if(!dc)return;while(dc.bufferedAmount>1024*1024){await new Promise(r=>setTimeout(r,15))}}
+async function sendFile(x,requestId=null){
+ if(!peerReady()||!x.blob)return;
+ const transferId=requestId||uid();
+ sendPeer({type:'file-meta',transferId,requestId,remoteId:x.id,name:x.name,mime:x.mime||x.blob.type||'application/octet-stream',size:x.size||x.blob.size,mediaType:x.mediaType,folderId:x.folderId||null});
+ const buf=await x.blob.arrayBuffer();
+ showTransferProgress('جاري إرسال '+x.name,0,buf.byteLength,'يتم إرسال الملف إلى الجهاز الآخر...');
+ const chunk=64*1024;
+ for(let i=0;i<buf.byteLength;i+=chunk){
+   await waitPeerBuffer();
+   const end=Math.min(i+chunk,buf.byteLength);
+   sendPeer({type:'file',transferId,remoteId:x.id,name:x.name,mime:x.mime||x.blob.type||'application/octet-stream',mediaType:x.mediaType,folderId:x.folderId||null,seq:Math.floor(i/chunk),data:buf.slice(i,end),last:end>=buf.byteLength});
+   sendPeer({type:'transfer-progress',transferId,done:end,total:buf.byteLength,stage:'sending'});
+   await new Promise(r=>setTimeout(r,0));
+ }
+ showTransferProgress('اكتمل الإرسال',buf.byteLength,buf.byteLength,'تم إرسال الملف بنجاح');hideTransferProgress();
+}
+async function serveRemoteStream(id,requestId){
+ const x=(await localAllMedia()).find(v=>!v.remote&&!v.deleted&&v.id===id);
+ if(!x||x.mediaType!=='video')return;
+ if(!x.blob){sendPeer({type:'remote-stream-error',requestId,error:'video-unavailable'});return;}
+ try{
+   if(activeRemoteCall){try{activeRemoteCall.close()}catch{}}
+   if(remoteStreamVideo){try{remoteStreamVideo.pause();URL.revokeObjectURL(remoteStreamVideo.src);remoteStreamVideo.remove()}catch{}}
+   remoteStreamVideo=document.createElement('video');
+   remoteStreamVideo.muted=true;
+   remoteStreamVideo.playsInline=true;
+   remoteStreamVideo.preload='auto';
+   remoteStreamVideo.style.position='fixed';
+   remoteStreamVideo.style.width='1px';
+   remoteStreamVideo.style.height='1px';
+   remoteStreamVideo.style.opacity='0';
+   remoteStreamVideo.style.pointerEvents='none';
+   remoteStreamVideo.style.zIndex='-1';
+   document.body.appendChild(remoteStreamVideo);
+   remoteStreamVideo.src=URL.createObjectURL(x.blob);
+   remoteStreamId=id;
+   await new Promise((resolve,reject)=>{
+     remoteStreamVideo.onloadedmetadata=resolve;
+     remoteStreamVideo.onerror=()=>reject(remoteStreamVideo.error||new Error('video load failed'));
+   });
+   const stream=remoteStreamVideo.captureStream?.()||remoteStreamVideo.mozCaptureStream?.();
+   if(!stream)throw new Error('captureStream unsupported');
+   activeRemoteCall=peer.call(conn.peer,stream,{metadata:{kind:'remote-stream',remoteId:id,requestId,name:x.name}});
+   activeRemoteCall.on('close',()=>{if(activeRemoteCall)activeRemoteCall=null});
+   activeRemoteCall.on('error',e=>console.error(e));
+   // ابدأ القراءة من الهاتف مباشرة بعد إنشاء قناة البث؛ لا ننتظر تنزيل الملف إلى الكمبيوتر.
+   await remoteStreamVideo.play();
+ }catch(e){console.error(e);sendPeer({type:'remote-stream-error',requestId,error:e.message||'stream-failed'});}
+}
+function handleRemoteControl(m){
+ if(!remoteStreamVideo)return;
+ try{
+   if(m.action==='play')remoteStreamVideo.play().catch(()=>{});
+   else if(m.action==='pause')remoteStreamVideo.pause();
+   else if(m.action==='seek'&&Number.isFinite(+m.value))remoteStreamVideo.currentTime=+m.value;
+ }catch{}
+}
+async function openRemoteStream(remoteId){
+ if(!peerReady()||!remoteSession)return toast('اتصل بالجهاز المقترن أولًا');
+ const x=(await allMedia()).find(v=>v.remoteId===remoteId);
+ if(!x)return toast('الفيديو غير موجود في مكتبة الجهاز المقترن');
+ currentItem=x;
+ $('#playerTitle').textContent=x.name;
+ $('#playerInfo').textContent='📡 تشغيل مباشر من الهاتف — الملف لا يُنزل إلى الكمبيوتر';
+ $('#resume').style.display='none';
+ const p=$('#player');
+ p.pause();
+ p.removeAttribute('src');
+ p.srcObject=null;
+ openModal('playerModal');
+ // نطلب البث مباشرة. لا يوجد تجهيز مسبق ولا تحميل إلى مكتبة الكمبيوتر.
+ sendPeer({type:'request-stream',id:x.remoteId,requestId:uid()});
+}
+function openRemoteBlobVideo(x){
+ currentItem=x;
+ const p=$('#player');
+ $('#playerTitle').textContent=x.name;
+ $('#playerInfo').textContent='📡 تشغيل من الذاكرة المؤقتة للجلسة';
+ $('#resume').style.display='none';
+ p.pause();
+ p.srcObject=null;
+ p.src=URL.createObjectURL(x.blob);
+ openModal('playerModal');
+ p.play().catch(()=>{});
+}
+async function serveRemoteFile(id,requestId=null){
+ const x=(await localAllMedia()).find(v=>!v.remote&&!v.deleted&&v.id===id);
+ if(!x||!x.blob){
+   if(requestId)sendPeer({type:'file-error',requestId,error:'الملف الأصلي غير متاح على الجهاز الآخر'});
+   return toast('الملف الأصلي غير متاح على الجهاز الآخر');
+ }
+ toast('جاري إرسال '+x.name);
+ // نعيد نفس requestId الذي أرسله الكمبيوتر حتى ترتبط الاستلام بعملية التنزيل الصحيحة.
+ await sendFile(x,requestId||('transfer_'+uid()));
+}
+const pendingRemoteSaves=new Map();
+async function saveRemoteToLaptop(remoteId,folderId=null){
+ if(!peerReady()||!remoteSession)return toast('انقطع اتصال الجهاز المقترن');
+ const x=(await allMedia()).find(v=>v.remoteId===remoteId);
+ if(!x)return toast('الملف غير موجود على الهاتف');
+ const requestId='save_'+uid();
+ pendingRemoteSaves.set(requestId,{remoteId,folderId});
+ toast('سيتم تنزيل الملف إلى مكتبة الكمبيوتر بعد تأكيدك');
+ sendPeer({type:'request-file',id:remoteId,requestId});
+}
+async function chooseRemoteFolder(remoteId){
+ if(!peerReady()||!remoteSession)return toast('انقطع اتصال الجهاز المقترن');
+ const fs=await allFolders();
+ if(!fs.length){
+   if(confirm('لا توجد مجلدات على الكمبيوتر. هل تريد تنزيل الملف إلى مكتبة الكمبيوتر الرئيسية؟')) return saveRemoteToLaptop(remoteId,null);
+   return;
+ }
+ const box=$('#moveList');
+ if(!box)return saveRemoteToLaptop(remoteId,null);
+ box.innerHTML=`<button class="folder" onclick="closeModal('moveModal');saveRemoteToLaptop('${remoteId}',null)"><div class="folder-icon">🚫</div><b>بدون مجلد</b></button>`+
+   fs.map(f=>`<button class="folder" onclick="closeModal('moveModal');saveRemoteToLaptop('${remoteId}','${String(f.id).replace(/'/g,"\\'")}')"><div class="folder-icon"><i class="fa-solid fa-folder"></i></div><b>${esc(f.name)}</b></button>`).join('');
+ openModal('moveModal');
+}
+
+async function requestRemoteFile(remoteId){
+ if(!peerReady()||!remoteSession)return toast('انقطع اتصال الجهاز الآخر');
+ const x=(await allMedia()).find(v=>v.remoteId===remoteId);
+ if(!x)return toast('الملف غير موجود');
+ if(x.mediaType==='video')return openRemoteStream(remoteId);
+ // الصور تُطلب عند فتحها فقط، ولا تُحفظ في مكتبة الكمبيوتر.
+ if(x.blob)return openImage(x.id);
+ window.remoteOpenAfterLoad=remoteId;
+ sendPeer({type:'request-file',id:remoteId,requestId:'open_'+uid()});
+ openModal('imageModal');
+}
+function updateTransferReceiveProgress(m){const key=m.transferId||'default';const done=Number(m.done)||0,total=Number(m.total)||0;receiveTransferBytes.set(key,done);showTransferProgress('جاري استلام '+(pendingTransfer?.name||'الملف'),done,total,'يتم نقل الملف إلى الكمبيوتر...')}
+async function receiveFile(m){
+ const key=m.transferId||'default';
+ if(m.data){
+   const arr=receiveChunksMap.get(key)||[];
+   arr[m.seq??arr.length]=m.data;
+   receiveChunksMap.set(key,arr);
+   const bytesNow=Number(receiveTransferBytes.get(key)||0)+((m.data?.byteLength)||0);
+   receiveTransferBytes.set(key,bytesNow);
+   showTransferProgress('جاري استلام '+(pendingTransfer?.name||m.name||'الملف'),bytesNow,Number(pendingTransfer?.size||m.size||0),'يتم استلام الملف إلى الكمبيوتر...');
+   if(m.last){
+     const chunks=receiveChunksMap.get(key)||[];
+     receiveChunksMap.delete(key);
+     const blob=new Blob(chunks,{type:m.mime||'application/octet-stream'});
+     const saveAction=m.requestId&&pendingRemoteSaves.get(m.requestId);
+     if(saveAction){
+       pendingRemoteSaves.delete(m.requestId);
+       const src=(await allMedia()).find(v=>v.remoteId===saveAction.remoteId);
+       const localRec={
+         id:uid(), mediaType:src?.mediaType||m.mediaType||'video', name:m.name||src?.name||'ملف من الهاتف',
+         type:'local', url:'', blob, thumbnail:src?.thumbnail||null, size:blob.size, mime:m.mime||src?.mime||blob.type||'',
+         date:Date.now(), favorite:false, deleted:false, folderId:saveAction.folderId||null, color:null, position:0, completed:false
+       };
+       await putMedia(localRec);
+       receiveTransferBytes.delete(key);showTransferProgress('اكتمل التنزيل',blob.size,blob.size,'تم حفظ الملف في مكتبة الكمبيوتر');hideTransferProgress(1400);
+       if(remoteSession){
+         await renderCurrent();
+         toast(saveAction.folderId?'تم تنزيل الملف إلى المجلد المحدد في الكمبيوتر':'تم تنزيل الملف إلى مكتبة الكمبيوتر');
+       } else toast('تم تنزيل الملف إلى الكمبيوتر');
+       return;
+     }
+     if(remoteSession && remoteCatalogCache && remoteCatalogCache.sourceId===remoteSourceId){
+       const item=remoteCatalogCache.media.find(v=>v.remoteId===m.remoteId);
+       if(item){
+         item.blob=blob;
+         item.size=blob.size;
+         item.mime=blob.type;
+         item.type='remote';
+         remotePrefetchPending.delete(item.remoteId);
+         if(remotePrefetchCurrentId===item.remoteId){
+           remotePrefetchCurrentId='';
+           remotePrefetchBusy=false;
+           clearTimeout(window.remotePrefetchTimeout);
+         }
+         renderCurrent();
+         // إذا كان المستخدم ينتظر هذا الملف، افتحه فور اكتمال أول تجهيز.
+         if(window.remoteOpenAfterLoad===item.remoteId){
+           window.remoteOpenAfterLoad=null;
+           if(item.mediaType==='video')openRemoteBlobVideo(item); else openImage(item.id);
+         }
+         setTimeout(processRemotePrefetch,0);
+         return;
+       }
+     }
+     receiveTransferBytes.delete(key);showTransferProgress('اكتمل النقل',blob.size,blob.size,'تم استلام الملف بنجاح');hideTransferProgress(1200);
+     toast('تم استلام '+(m.name||'الملف'));
+   }
+ }
+}
+
+function blobToDataURL(blob){return new Promise((resolve,reject)=>{if(!blob)return resolve(null);const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.readAsDataURL(blob)})}
+function dataURLToBlob(data){if(!data)return null;try{const [head,b64]=data.split(',');const mime=(head.match(/data:([^;]+)/)||[])[1]||'application/octet-stream';const bin=atob(b64);const bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);return new Blob([bytes],{type:mime})}catch{return null}}
+function downloadBlob(blob,name){const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500)}
+async function exportBackup(){const data={format:'vhp-lite',version:'2.1.0',date:new Date().toISOString(),settings,theme:document.documentElement.dataset.theme,navOrder:JSON.parse(localStorage.vhNavOrder||'[]'),folders:await allFolders(),media:(await allMedia()).map(x=>({id:x.id,mediaType:x.mediaType,name:x.name,type:x.type,url:x.url||'',size:x.size||0,mime:x.mime||'',date:x.date,favorite:x.favorite,deleted:x.deleted,folderId:x.folderId,color:x.color,position:x.position,completed:x.completed}))};downloadBlob(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),'VideoHubPro_Lite_'+Date.now()+'.json');toast('تم تصدير JSON الخفيف')}
+async function exportFullBackup(){try{const media=await allMedia();toast('جاري تجهيز النسخة الكاملة...');const packed=[];for(let i=0;i<media.length;i++){const x=media[i];packed.push({...x,blobData:x.blob?await blobToDataURL(x.blob):null,thumbnailData:x.thumbnail?await blobToDataURL(x.thumbnail):null,blob:undefined,thumbnail:undefined});if(i%3===0)await new Promise(r=>setTimeout(r,0))}const data={format:'vhp-full',version:'2.1.0',date:new Date().toISOString(),app:'Video Hub Pro',settings,theme:document.documentElement.dataset.theme,navOrder:JSON.parse(localStorage.vhNavOrder||'[]'),folders:await allFolders(),media:packed};downloadBlob(new Blob([JSON.stringify(data)],{type:'application/json'}),'VideoHubPro_FullBackup_'+Date.now()+'.vhp.json');toast('تم تصدير النسخة الكاملة بنجاح')}catch(e){console.error(e);toast('تعذر إنشاء النسخة الكاملة')}
+}
+async function importFullBackup(file){if(!file)return;try{if(!confirm('سيتم دمج بيانات النسخة مع المكتبة الحالية. هل تريد المتابعة؟')){file.value='';return}toast('جاري استيراد النسخة...');const d=JSON.parse(await file.text());if(d.format!=='vhp-full')return importBackup(file);if(d.settings){settings=Object.assign(settings,d.settings);localStorage.vhSettings=JSON.stringify(settings);loadSettings()}if(d.theme)setTheme(d.theme);if(Array.isArray(d.navOrder)){localStorage.vhNavOrder=JSON.stringify(d.navOrder)}for(const f of d.folders||[])await putFolder(f);for(const x of d.media||[]){const rec={...x};delete rec.blobData;delete rec.thumbnailData;if(x.blobData)rec.blob=dataURLToBlob(x.blobData);if(x.thumbnailData)rec.thumbnail=dataURLToBlob(x.thumbnailData);if(!rec.blob&&rec.type==='local')continue;await putMedia(rec)}await renderFolders();await renderCurrent();initNavReorder();toast('تم استيراد النسخة الكاملة بنجاح')}catch(e){console.error(e);toast('ملف النسخة غير صالح أو تالف')}}
+async function importBackup(file){if(!file)return;try{const d=JSON.parse(await file.text());if(d.settings){settings=Object.assign(settings,d.settings);localStorage.vhSettings=JSON.stringify(settings);loadSettings()}if(d.theme)setTheme(d.theme);if(Array.isArray(d.navOrder))localStorage.vhNavOrder=JSON.stringify(d.navOrder);for(const f of d.folders||[])await putFolder(f);for(const x of d.media||[]){if(!x.type||x.type==='url')await putMedia({...x,deleted:false})}await renderFolders();await renderCurrent();initNavReorder();toast('تم استيراد بيانات JSON بنجاح')}catch{toast('ملف النسخة غير صالح')}}
+async function clearAll(){if(!confirm('سيتم حذف جميع الفيديوهات والصور والمجلدات نهائيًا. هل أنت متأكد؟'))return;for(const x of await allMedia())await delMedia(x.id);for(const f of await allFolders())await delFolder(f.id);selected.clear();renderCurrent();toast('تم مسح جميع البيانات')}
+function showInfo(){openModal('infoModal');$('#infoBody').innerHTML='<b>Video Hub Pro — Unified Edition</b><br>إصدار 2.1.0<br><br>نسخة موحدة تجمع إدارة الفيديوهات والصور والمجلدات والمفضلة والسلة والروابط والتحديد المتعدد والمشاهدة المستمرة والاقتران والثيمات والنسخ الاحتياطي.'}
+
+$('#player').addEventListener('timeupdate',()=>{if(currentItem?.remote&&remoteSession)return;if(currentItem&&settings.resume&&$('#player').currentTime>1){currentItem.position=$('#player').currentTime;if($('#player').duration&&$('#player').currentTime>$('#player').duration-3)currentItem.completed=true;clearTimeout(window.savePos);window.savePos=setTimeout(()=>putMedia(currentItem),700)}});
+$('#player').addEventListener('ended',()=>{if(currentItem?.remote&&remoteSession){sendPeer({type:'remote-control',action:'pause',value:0});return}if(currentItem){currentItem.position=0;currentItem.completed=true;putMedia(currentItem)}});
+$('#player').addEventListener('play',()=>{if(remoteSession&&currentItem?.remote)sendPeer({type:'remote-control',action:'play'});});
+$('#player').addEventListener('pause',()=>{if(remoteSession&&currentItem?.remote)sendPeer({type:'remote-control',action:'pause',value:$('#player').currentTime||0});});
+$('#player').addEventListener('seeked',()=>{if(remoteSession&&currentItem?.remote)sendPeer({type:'remote-control',action:'seek',value:$('#player').currentTime||0});});
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal('playerModal');closeModal('imageModal');closeMore()}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('#search').focus()}});
+window.addEventListener('beforeunload',()=>{if(conn?.open)conn.close()});
+
+window.addEventListener('hashchange',applyPhoneInterfaceMode);
+applyPhoneInterfaceMode();
+async function restoreRemoteSessionAfterRefresh(){
+  if(localStorage.getItem('vhRemoteMode')!=='1') return;
+  const role=localStorage.getItem('vhPairRole');
+  const code=localStorage.getItem('vhPairCode');
+  if(role==='joiner' && /^\d{6}$/.test(code) && window.Peer){
+    // Recreate the client connection after a page refresh, then reopen the same remote UI.
+    try{
+      peer=new Peer(undefined,{host:'0.peerjs.com',port:443,path:'/',secure:true,debug:0});
+      bindPeerCalls();
+      peer.on('open',()=>{
+        conn=peer.connect('vhpro-'+code,{reliable:true});
+        bindPeerConnection(conn,'الجهاز المضيف');
+      });
+      peer.on('error',e=>{ if(localStorage.getItem('vhRemoteMode')==='1') toast('تعذر إعادة الاتصال بالجهاز المقترن'); });
+      return;
+    }catch(e){console.error(e)}
+  }
+}
+(async function boot(){try{await initDB();loadTheme();loadSettings();await renderFolders();await renderCurrent();if(localStorage.getItem('vhRemoteMode')==='1'){document.body.classList.add('remote-session');await restoreRemoteSessionAfterRefresh();}else{toast('Video Hub Pro جاهز')}}catch(e){console.error(e);toast('تعذر فتح التخزين المحلي')}})();
+initNavReorder();
+</script>
+
+<style id="remote-session-style">
+.remote-back-float{display:none;position:fixed;left:18px;bottom:18px;z-index:100000;width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:linear-gradient(135deg,var(--p2),var(--p));color:#fff;font-size:23px;box-shadow:0 10px 28px rgba(0,0,0,.35);cursor:pointer;align-items:center;justify-content:center}
+body.remote-session .remote-back-float{display:flex}
+body.remote-session #view-pair{display:none!important}
+body.remote-session [data-view="pair"]{display:none!important}
+body.remote-session .remote-back-float{display:flex!important}
+body.remote-session .top-actions .primary,body.remote-session .top-actions .icon-btn{display:none!important}
+body.remote-session .remote-local-hide{display:none!important}
+body.remote-session .quick button{display:none}
+body.remote-session #view-videos .toolbar .btn.primary,body.remote-session #view-videos .toolbar .btn:not(#selectBtn),body.remote-session #view-images .toolbar .btn.primary,body.remote-session #view-folders .toolbar .btn.primary{display:none!important}
+body.remote-session #view-home .storage-limit,body.remote-session #view-home .storage-actions,body.remote-session #view-storage .storage-limit,body.remote-session #view-storage .storage-actions{display:none!important}
+body.remote-session .remote-item .thumb{cursor:pointer}
+body.remote-session .content{padding-top:18px}
+@media(max-width:600px){.remote-back-float{left:12px;bottom:calc(84px + env(safe-area-inset-bottom));width:44px;height:44px}}
+</style>
+<script id="remote-session-script">
+// The paired-device button opens this same Video Hub Pro interface in remote mode.
+// Local data is never mixed into the remote session; only the catalog received from the paired device is rendered.
+window.addEventListener('beforeunload',()=>{try{if(conn?.open)conn.close()}catch{}});
+</script>
+</body>
+</html>
