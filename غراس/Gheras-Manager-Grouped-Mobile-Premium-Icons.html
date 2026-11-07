@@ -146,6 +146,35 @@
       table{min-width:0!important;width:100%!important}
       th,td{font-size:10pt!important;color:#111!important}
     }
+    /* قائمة جانبية منزلقة للشاشات الصغيرة */
+    .mobile-menu-toggle{display:none}
+    .mobile-drawer-backdrop{display:none}
+    @media(max-width:820px){
+      .mobile-bottom-nav{display:none!important}
+      .mobile-menu-toggle{display:inline-grid!important;place-items:center;flex:0 0 39px;font-size:1.25rem}
+      .main-wrapper{margin-right:0!important;padding-bottom:0!important}
+      .sidebar{
+        display:flex!important;position:fixed!important;top:0!important;right:0!important;left:auto!important;bottom:0!important;
+        width:min(84vw,320px)!important;height:100vh!important;height:100dvh!important;z-index:120!important;
+        flex-direction:column!important;transform:translateX(105%)!important;
+        visibility:hidden!important;pointer-events:none!important;
+        transition:transform .25s ease,visibility .25s ease!important;
+        overflow:hidden!important;box-shadow:-12px 0 35px rgba(0,0,0,.3)!important;
+      }
+      body.mobile-drawer-open .sidebar{
+        transform:translateX(0)!important;visibility:visible!important;pointer-events:auto!important;
+      }
+      .sidebar .nav-menu{display:flex!important;flex:1 1 auto!important;overflow-y:auto!important;padding-bottom:24px!important}
+      .sidebar .user-profile-bar{display:flex!important}
+      .mobile-drawer-backdrop{
+        display:block;position:fixed;inset:0;z-index:110;background:rgba(3,8,20,.58);
+        opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease,visibility .25s ease;
+      }
+      body.mobile-drawer-open .mobile-drawer-backdrop{opacity:1;visibility:visible;pointer-events:auto}
+      .top-header{gap:8px}
+      .header-actions{gap:6px}
+    }
+    @media(prefers-reduced-motion:reduce){.sidebar,.mobile-drawer-backdrop{transition:none!important}}
   </style>
 </head>
 <body>
@@ -179,7 +208,8 @@
   </section>
 
   <section id="appShell" class="app-shell hidden">
-    <aside class="sidebar">
+    <div class="mobile-drawer-backdrop" id="mobileDrawerBackdrop"></div>
+    <aside class="sidebar" id="appSidebar">
       <div class="brand-header">
         <span class="brand-mark" id="appBrandIcon" aria-hidden="true"><span class="brand-mark-emoji">📖</span></span>
         <div><div class="brand-title">نور الحلقات</div><div class="brand-tagline">إدارة حلقات تعليم القرآن الكريم</div></div>
@@ -191,6 +221,7 @@
       <header class="top-header">
         <div><div class="header-title" id="pageTitle">لوحة التحكم</div><div class="header-subtitle" id="pageSubtitle">متابعة حلقات تعليم القرآن الكريم</div></div>
         <div class="header-actions">
+          <button id="mobileMenuToggle" class="icon-btn mobile-menu-toggle" type="button" aria-label="فتح القائمة الجانبية" aria-expanded="false">☰</button>
           <button id="notificationsButton" class="icon-btn" type="button" title="الإشعارات">🔔<span id="notificationCount" class="notification-count hidden">0</span></button>
           <button id="refreshButton" class="btn btn-outline" type="button">↻ تحديث</button>
           <button id="logoutButton" class="btn btn-outline" type="button">خروج</button>
@@ -986,6 +1017,18 @@
     $('logoutButton').addEventListener('click',async()=>{if(state.notificationChannel){await supabaseClient.removeChannel(state.notificationChannel);state.notificationChannel=null;}await supabaseClient.auth.signOut();state.user=null;state.profile=null;state.role=null;showLogin();notify('تم تسجيل الخروج.');});
     $('refreshButton').addEventListener('click',()=>refreshData());
     $('notificationsButton').addEventListener('click',renderNotifications);
+    const mobileMenuToggle=$('mobileMenuToggle');
+    const mobileDrawerBackdrop=$('mobileDrawerBackdrop');
+    const closeMobileDrawer=()=>{
+      document.body.classList.remove('mobile-drawer-open');
+      if(mobileMenuToggle){mobileMenuToggle.setAttribute('aria-expanded','false');mobileMenuToggle.textContent='☰';}
+    };
+    if(mobileMenuToggle)mobileMenuToggle.addEventListener('click',()=>{
+      const opened=document.body.classList.toggle('mobile-drawer-open');
+      mobileMenuToggle.setAttribute('aria-expanded',String(opened));
+      mobileMenuToggle.textContent=opened?'✕':'☰';
+    });
+    if(mobileDrawerBackdrop)mobileDrawerBackdrop.addEventListener('click',closeMobileDrawer);
     $('modalCancelButton').addEventListener('click',closeModal);
     $('modalOverlay').addEventListener('click',e=>{if(e.target===$('modalOverlay'))closeModal();});
     document.addEventListener('click',e=>{
@@ -998,7 +1041,14 @@
         if(target)target.classList.toggle('open');
         return;
       }
-      const tab=e.target.closest('[data-tab]');if(tab){setTab(tab.dataset.tab);return;}
+      const tab=e.target.closest('[data-tab]');if(tab){
+        if(tab.closest('#desktopNav')){
+          document.body.classList.remove('mobile-drawer-open');
+          $('mobileMenuToggle')?.setAttribute('aria-expanded','false');
+          if($('mobileMenuToggle'))$('mobileMenuToggle').textContent='☰';
+        }
+        setTab(tab.dataset.tab);return;
+      }
       const action=e.target.closest('[data-action]');if(action)clickAction(action.dataset.action,action);
       if(!e.target.closest('.mobile-bottom-nav .mobile-nav-menu')){
         $('mobileCoreMenu')?.classList.remove('open');$('mobileMoreMenu')?.classList.remove('open');
