@@ -212,6 +212,35 @@
       .mobile-bottom-nav>.mobile-nav-btn{flex-basis:70px!important;width:70px!important;min-width:70px!important;max-width:70px!important}
     }
 
+  
+    /* قائمة جانبية للهاتف: نفس أقسام القائمة الرئيسية دون شريط سفلي */
+    .mobile-menu-toggle{display:none}
+    .mobile-drawer-backdrop{display:none}
+    @media(max-width:820px){
+      .mobile-bottom-nav{display:none!important}
+      .mobile-menu-toggle{display:inline-grid!important;place-items:center;flex:none;font-size:1.25rem}
+      .main-wrapper{margin-right:0!important;padding-bottom:0!important}
+      .sidebar{
+        display:flex!important;position:fixed!important;top:0!important;bottom:0!important;
+        right:0!important;left:auto!important;width:min( min(84vw,320px), 320px)!important;
+        height:100dvh!important;z-index:120!important;
+        transform:translateX(110%);transition:transform .25s ease;
+        box-shadow:-12px 0 35px rgba(0,0,0,.28)!important;
+        overflow:hidden!important;
+      }
+      body.mobile-drawer-open .sidebar{transform:translateX(0)}
+      .sidebar .nav-menu{overflow-y:auto!important;padding-bottom:24px!important}
+      .sidebar .user-profile-bar{display:flex!important}
+      .mobile-drawer-backdrop{
+        display:block;position:fixed;inset:0;background:rgba(3,8,20,.58);
+        z-index:110;opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease;
+      }
+      body.mobile-drawer-open .mobile-drawer-backdrop{opacity:1;visibility:visible}
+      .top-header{gap:8px}
+      .header-actions{gap:6px}
+    }
+    @media(prefers-reduced-motion:reduce){.sidebar,.mobile-drawer-backdrop{transition:none!important}}
+
   </style>
 </head>
 <body>
@@ -245,7 +274,8 @@
   </section>
 
   <section id="appShell" class="app-shell hidden">
-    <aside class="sidebar">
+    <div class="mobile-drawer-backdrop" id="mobileDrawerBackdrop"></div>
+    <aside class="sidebar" id="appSidebar">
       <div class="brand-header">
         <span class="brand-mark" id="appBrandIcon" aria-hidden="true"><span class="brand-mark-emoji">📖</span></span>
         <div><div class="brand-title">نور الحلقات</div><div class="brand-tagline">إدارة حلقات تعليم القرآن الكريم</div></div>
@@ -257,6 +287,7 @@
       <header class="top-header">
         <div><div class="header-title" id="pageTitle">لوحة التحكم</div><div class="header-subtitle" id="pageSubtitle">متابعة حلقات تعليم القرآن الكريم</div></div>
         <div class="header-actions">
+          <button id="mobileMenuToggle" class="icon-btn mobile-menu-toggle" type="button" aria-label="فتح القائمة الجانبية" aria-expanded="false">☰</button>
           <button id="notificationsButton" class="icon-btn" type="button" title="الإشعارات">🔔<span id="notificationCount" class="notification-count hidden">0</span></button>
           <button id="refreshButton" class="btn btn-outline" type="button">↻ تحديث</button>
           <button id="logoutButton" class="btn btn-outline" type="button">خروج</button>
@@ -1049,6 +1080,23 @@
     $('modalCancelButton').addEventListener('click',closeModal);
     $('modalOverlay').addEventListener('click',e=>{if(e.target===$('modalOverlay'))closeModal();});
     document.addEventListener('click',e=>{
+      if(e.target.closest('#mobileMenuToggle')){
+        const opened=document.body.classList.toggle('mobile-drawer-open');
+        $('mobileMenuToggle').setAttribute('aria-expanded',String(opened));
+        $('mobileMenuToggle').textContent=opened?'✕':'☰';
+        return;
+      }
+      if(e.target.closest('#mobileDrawerBackdrop')){
+        document.body.classList.remove('mobile-drawer-open');
+        $('mobileMenuToggle')?.setAttribute('aria-expanded','false');
+        if($('mobileMenuToggle'))$('mobileMenuToggle').textContent='☰';
+        return;
+      }
+      if(e.target.closest('#desktopNav .nav-btn')){
+        document.body.classList.remove('mobile-drawer-open');
+        $('mobileMenuToggle')?.setAttribute('aria-expanded','false');
+        if($('mobileMenuToggle'))$('mobileMenuToggle').textContent='☰';
+      }
       const toggle=e.target.closest('[data-toggle-menu]');
       if(toggle){
         const target=$('mobileCoreMenu');
