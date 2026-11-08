@@ -401,13 +401,49 @@
 
   async function loadProfile() {
     const { data, error } = await supabaseClient.from('profiles')
-      .select('user_id,full_name,role').eq('user_id', state.user.id).single();
+      .select('user_id,full_name,role,username').eq('user_id', state.user.id).single();
     if (error) throw error;
     if (!data || !['manager','teacher'].includes(data.role)) { await supabaseClient.auth.signOut(); state.user=null; throw new Error('هذا الحساب غير مفعّل كمدير أو معلمة في النظام.'); }
     state.profile = data; state.role = data.role;
     $('sideUserName').textContent = data.full_name || state.user.email;
     $('sideUserRole').textContent = data.role === 'manager' ? 'المدير العام' : 'المعلمة';
     $('sideAvatar').textContent = (data.full_name || 'ن').trim().charAt(0);
+  }
+
+  async function claimInitialManagerUsername(session) {
+    if (state.role !== 'manager' || !session?.access_token) return;
+    const desiredUsername = 'Mohammad Najib';
+    const existingUsername = String(state.profile?.username || '').trim();
+    if (existingUsername) {
+      if (existingUsername.toLowerCase() !== desiredUsername.toLowerCase()) {
+        notify('حساب المدير مرتبط مسبقاً باسم مستخدم مختلف؛ لم نغيّر أي بيانات.', 'error');
+      }
+      return;
+    }
+
+    try {
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/username-auth`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_PUBLISHABLE_KEY,
+          'Authorization': `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({
+          action: 'claim_manager_username',
+          username: desiredUsername
+        })
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'تعذر ربط اسم المستخدم.');
+      }
+      state.profile.username = result.username;
+      notify('تم ربط اسم المستخدم Mohammad Najib بحساب المدير الحالي بنجاح.');
+    } catch (error) {
+      console.error('Manager username setup:', error);
+      notify(error.message || 'تعذر ربط اسم المستخدم حالياً. لم يتم تغيير كلمة المرور أو الحساب.', 'error');
+    }
   }
 
   async function loadData() {
@@ -913,7 +949,7 @@
   async function handleSession(session) {
     if(!session?.user){if(state.notificationChannel){supabaseClient.removeChannel(state.notificationChannel);state.notificationChannel=null;}state.user=null;state.profile=null;state.role=null;showLogin();return;}
     state.user=session.user;showApp();$('mainContent').innerHTML='<div class="loading"><div class="spinner"></div>جارٍ التحقق من الحساب...</div>';
-    try{await loadProfile();await loadBrandingSettings();startNotificationsRealtime();state.tab='dashboard';renderNav();await refreshData(false);}
+    try{await loadProfile();await claimInitialManagerUsername(session);await loadBrandingSettings();startNotificationsRealtime();state.tab='dashboard';renderNav();await refreshData(false);}
     catch(e){await supabaseClient.auth.signOut();showLogin(errorMessage(e));}
   }
 
