@@ -189,9 +189,9 @@
         <div><div class="brand-title">نور الحلقات</div><div class="brand-tagline">منصة إدارة حلقات تعليم القرآن الكريم</div></div>
       </div>
       <h1 id="loginHeading">تسجيل الدخول</h1>
-      <p class="intro" id="loginIntro">سجّل الدخول بحساب المدير أو المعلمة لمتابعة الحلقات والطالبات.</p>
+      <p class="intro" id="loginIntro">أدخل اسم المستخدم وكلمة المرور للدخول إلى حسابك ومتابعة الحلقات والطالبات.</p>
       <form id="loginForm">
-        <div class="input-group"><label for="loginEmail">البريد الإلكتروني</label><input class="input-control ltr" id="loginEmail" type="email" autocomplete="username" required placeholder="name@example.com"></div>
+        <div class="input-group"><label for="loginUsername">اسم المستخدم</label><input class="input-control ltr" id="loginUsername" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" required placeholder="Mohammad Najib"></div>
         <div class="input-group"><label for="loginPassword">كلمة المرور</label><input class="input-control ltr" id="loginPassword" type="password" autocomplete="current-password" required placeholder="كلمة المرور"></div>
         <div id="loginError" class="login-error hidden"></div>
         <button id="loginButton" class="btn btn-primary btn-block" type="submit">دخول إلى البرنامج</button>
@@ -955,14 +955,27 @@
 
   async function login(event) {
     event.preventDefault();const button=$('loginButton');setBusy(button,true,'جارٍ تسجيل الدخول...');$('loginError').classList.add('hidden');
-    try{const {data,error}=await supabaseClient.auth.signInWithPassword({email:$('loginEmail').value.trim(),password:$('loginPassword').value});if(error)throw error;await handleSession(data.session);}
+    try{
+      const response=await fetch(`${SUPABASE_URL}/functions/v1/username-auth`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','apikey':SUPABASE_PUBLISHABLE_KEY},
+        body:JSON.stringify({action:'login',username:$('loginUsername').value.trim(),password:$('loginPassword').value})
+      });
+      const result=await response.json().catch(()=>({}));
+      if(!response.ok||!result.success||!result.session?.access_token||!result.session?.refresh_token){
+        throw new Error(result.error||'تعذر تسجيل الدخول. تحقق من اسم المستخدم وكلمة المرور.');
+      }
+      const {error}=await supabaseClient.auth.setSession({access_token:result.session.access_token,refresh_token:result.session.refresh_token});
+      if(error)throw error;
+    }
     catch(e){$('loginError').textContent=errorMessage(e);$('loginError').classList.remove('hidden');}
     finally{setBusy(button,false);}
   }
 
   async function forgotPassword() {
-    const email=$('loginEmail').value.trim();
-    if(!email){notify('اكتب البريد الإلكتروني المسجل لحساب المدير أولاً.','error');return;}
+    const email=window.prompt('أدخل البريد الإلكتروني المسجل في حسابك لإرسال رابط استعادة كلمة المرور:');
+    if(email===null)return;
+    if(!email.trim()){notify('يجب إدخال البريد الإلكتروني لاستعادة كلمة المرور.','error');return;}
     if(window.location.protocol==='file:'){
       notify('افتح البرنامج من رابط يبدأ بـ http:// أو https:// قبل طلب الاستعادة؛ فتح ملف HTML مباشرة لا يسمح بالعودة إلى صفحة تغيير كلمة المرور.','error');
       return;
@@ -970,7 +983,7 @@
     const button=$('forgotPasswordButton');setBusy(button,true,'جارٍ إرسال رابط الاستعادة...');
     try{
       const redirectTo=`${window.location.origin}${window.location.pathname}`;
-      const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo});
+      const {error}=await supabaseClient.auth.resetPasswordForEmail(email.trim(),{redirectTo});
       if(error)throw error;
       notify('إذا كان البريد مسجلاً، ستصلك رسالة استعادة. افتحها من نفس الجهاز والمتصفح.');
     }catch(e){notify(errorMessage(e),'error');}
