@@ -93,7 +93,7 @@
 const firebaseConfig={apiKey:"AIzaSyA9IL98KrQRMsho-9TodTOMoytjOY4r0JY",authDomain:"baytna-6b81d.firebaseapp.com",projectId:"baytna-6b81d",storageBucket:"baytna-6b81d.firebasestorage.app",messagingSenderId:"1031948477571",appId:"1:1031948477571:web:d2980a3f8d071cd8f0a7b6"};
 firebase.initializeApp(firebaseConfig);
 const auth=firebase.auth(),db=firebase.firestore();
-const $=s=>document.querySelector(s),$=s=>[...document.querySelectorAll(s)];
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 let currentUser=null,familyId=localStorage.getItem('baytna_family_id')||'',familyRef=null,unsubs=[],items=[],logs=[],members=[],requests=[],filter='all',authMode='login';
 const pages={dashboard:'لوحة المنزل',list:'قائمة الاحتياجات',members:'أفراد العائلة',activity:'سجل التعديلات'};
 function msg(id,t){$(id).textContent=t||''}
