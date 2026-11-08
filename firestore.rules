@@ -1,0 +1,82 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+    function familyPath(familyId) {
+      return /databases/$(database)/documents/families/$(familyId);
+    }
+    function familyExists(familyId) {
+      return exists(familyPath(familyId));
+    }
+    function isOwner(familyId) {
+      return signedIn()
+        && get(familyPath(familyId)).data.ownerId == request.auth.uid;
+    }
+    function isActiveMember(familyId) {
+      return signedIn()
+        && exists(/databases/$(database)/documents/families/$(familyId)/members/$(request.auth.uid))
+        && get(/databases/$(database)/documents/families/$(familyId)/members/$(request.auth.uid)).data.status == 'active';
+    }
+
+    match /families/{familyId} {
+      allow create: if signedIn()
+        && request.resource.data.ownerId == request.auth.uid;
+      allow read: if isActiveMember(familyId);
+      allow update, delete: if isOwner(familyId);
+
+      match /members/{memberId} {
+        allow read: if isActiveMember(familyId);
+        allow create: if isOwner(familyId)
+          && request.resource.data.uid == memberId;
+        allow update, delete: if isOwner(familyId);
+      }
+
+      match /items/{itemId} {
+        allow read: if isActiveMember(familyId);
+        allow create: if isActiveMember(familyId)
+          && request.resource.data.createdBy == request.auth.uid;
+        allow update: if isActiveMember(familyId);
+        allow delete: if isActiveMember(familyId);
+      }
+
+      match /activity/{activityId} {
+        allow read: if isActiveMember(familyId);
+        allow create: if isActiveMember(familyId)
+          && request.resource.data.actorId == request.auth.uid;
+        allow update, delete: if false;
+      }
+
+      match /joinRequests/{requestId} {
+        allow create: if signedIn()
+          && familyExists(familyId)
+          && request.resource.data.uid == request.auth.uid
+          && requestId == request.auth.uid
+          && request.resource.data.status == 'pending';
+        allow read: if isOwner(familyId)
+          || (signedIn() && requestId == request.auth.uid);
+        allow update: if isOwner(familyId)
+          && resource.data.status == 'pending'
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+          && request.resource.data.uid == resource.data.uid
+          && request.resource.data.status in ['approved', 'rejected'];
+        allow delete: if isOwner(familyId)
+          || (signedIn() && requestId == request.auth.uid
+              && resource.data.status == 'pending');
+      }
+
+      match /invites/{inviteId} {
+        allow read: if signedIn() && resource.data.enabled == true;
+        allow create: if isOwner(familyId)
+          && request.resource.data.enabled == true;
+        allow update, delete: if isOwner(familyId);
+      }
+    }
+
+    // No client access to unspecified collections by default.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
