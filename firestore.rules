@@ -7,6 +7,9 @@ service cloud.firestore {
     function familyPath(familyId) {
       return /databases/$(database)/documents/families/$(familyId);
     }
+    function familyExists(familyId) {
+      return exists(familyPath(familyId));
+    }
     function isOwner(familyId) {
       return signedIn()
         && get(familyPath(familyId)).data.ownerId == request.auth.uid;
@@ -47,6 +50,7 @@ service cloud.firestore {
 
       match /joinRequests/{requestId} {
         allow create: if signedIn()
+          && familyExists(familyId)
           && request.resource.data.uid == request.auth.uid
           && requestId == request.auth.uid
           && request.resource.data.status == 'pending';
