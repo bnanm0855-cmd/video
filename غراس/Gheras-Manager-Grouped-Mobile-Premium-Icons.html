@@ -979,7 +979,7 @@
   async function handleSession(session) {
     if(!session?.user){if(state.notificationChannel){supabaseClient.removeChannel(state.notificationChannel);state.notificationChannel=null;}state.user=null;state.profile=null;state.role=null;showLogin();return;}
     state.user=session.user;showApp();$('mainContent').innerHTML='<div class="loading"><div class="spinner"></div>جارٍ التحقق من الحساب...</div>';
-    try{await loadProfile();await claimInitialManagerUsername(session);await loadBrandingSettings();startNotificationsRealtime();state.tab='dashboard';renderNav();await refreshData(false);}
+    try{await loadProfile();await claimInitialManagerUsername(session);await loadBrandingSettings();startNotificationsRealtime();state.tab=state.role==='examiner'?'examiner':'dashboard';renderNav();await refreshData(false);}
     catch(e){await supabaseClient.auth.signOut();showLogin(errorMessage(e));}
   }
 
