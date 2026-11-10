@@ -257,7 +257,7 @@
 
   const state = {
     user: null, profile: null, role: null, tab: 'dashboard',
-    teachers: [], teacherAdminError: '', examinerRecords: [], halaqat: [], students: [], allStudents: [], departedStudents: [], studentNotes: [], attendance: [], recitations: [], historyAttendance: [], historyRecitations: [], admissions: [], notifications: [], notificationChannel: null,
+    teachers: [], teacherAdminError: '', examiners: [], examinerAdminError: '', examinerRecords: [], halaqat: [], students: [], allStudents: [], departedStudents: [], studentNotes: [], attendance: [], recitations: [], historyAttendance: [], historyRecitations: [], admissions: [], notifications: [], notificationChannel: null,
     busy: false,
     branding: {name:'نور الحلقات', iconType:'emoji', iconValue:'📖'},
     brandingDraft: null,
@@ -379,6 +379,23 @@
     state.teacherAdminError = '';
   }
 
+  // حسابات المختبرات محفوظة في profiles بدور examiner، ويقرأها المدير فقط.
+  async function reloadExaminers() {
+    const {data,error} = await supabaseClient
+      .from('profiles')
+      .select('user_id,full_name,username,created_at')
+      .eq('role','examiner')
+      .order('created_at',{ascending:false});
+    if (error) throw error;
+    state.examiners = (data || []).map(p => ({
+      ...p,
+      user_id:p.user_id,
+      full_name:p.full_name || 'بدون اسم',
+      username:p.username || ''
+    }));
+    state.examinerAdminError = '';
+  }
+
   function showLogin(message='') {
     recoveryMode = false;
     $('loginScreen').classList.remove('hidden'); $('appShell').classList.add('hidden');
@@ -454,7 +471,7 @@
       const {data: records,error:recordsError}=await supabaseClient.from('examiner_test_records').select('*').eq('examiner_id',state.user.id).order('created_at',{ascending:false});
       if(recordsError) throw recordsError;
       state.examinerRecords=records || [];
-      state.teachers=[];state.halaqat=[];state.students=[];state.allStudents=[];state.departedStudents=[];state.studentNotes=[];
+      state.teachers=[];state.examiners=[];state.halaqat=[];state.students=[];state.allStudents=[];state.departedStudents=[];state.studentNotes=[];
       state.attendance=[];state.recitations=[];state.historyAttendance=[];state.historyRecitations=[];state.notifications=[];
       updateNotificationCount(); return;
     }
@@ -469,7 +486,13 @@
     state.allStudents=studentResult.data||[];state.students=state.allStudents.filter(s=>s.is_departed!==true);state.departedStudents=state.allStudents.filter(s=>s.is_departed===true);
     const {data:studentNotes,error:studentNotesError}=await supabaseClient.from('student_notes').select('*').order('created_at',{ascending:false});
     if(studentNotesError)throw studentNotesError;state.studentNotes=studentNotes||[];
-    if(manager){try{await reloadTeachers();}catch(e){state.teachers=[];state.teacherAdminError=errorMessage(e);}}else{state.teachers=[];state.teacherAdminError='';}
+    if(manager){
+      try{await reloadTeachers();}catch(e){state.teachers=[];state.teacherAdminError=errorMessage(e);}
+      try{await reloadExaminers();}catch(e){state.examiners=[];state.examinerAdminError=errorMessage(e);}
+    }else{
+      state.teachers=[];state.teacherAdminError='';
+      state.examiners=[];state.examinerAdminError='';
+    }
     const monthStart=`${today().slice(0,7)}-01`;
     const {data:attendance,error:attendanceError}=await supabaseClient.from('attendance').select('*').gte('attendance_date',monthStart).lte('attendance_date',today()).order('attendance_date',{ascending:false});
     if(attendanceError)throw attendanceError;state.attendance=attendance||[];
@@ -660,15 +683,42 @@
   }
 
   function renderTeachers() {
-    const rows = state.teachers.map(t=>{
+    const teacherRows = state.teachers.map(t=>{
       const disabled = teacherIsDisabled(t);
       const status = disabled ? '<span class="badge badge-red">معطّل</span>' : '<span class="badge badge-green">مفعّل</span>';
       const circles = state.halaqat.filter(h=>h.teacher_id===t.user_id).map(h=>h.name).join('، ') || 'لم تعيّن لحلقة';
       const actions = `<div class="row-actions"><button class="btn btn-outline btn-sm" data-action="edit-teacher" data-id="${esc(t.user_id)}">تعديل</button><button class="btn btn-outline btn-sm" data-action="teacher-password" data-id="${esc(t.user_id)}">كلمة مرور جديدة</button>${disabled ? `<button class="btn btn-success btn-sm" data-action="enable-teacher" data-id="${esc(t.user_id)}">إعادة تفعيل</button>` : `<button class="btn btn-danger btn-sm" data-action="disable-teacher" data-id="${esc(t.user_id)}">تعطيل</button>`}</div>`;
-      return `<tr><td><strong>${esc(t.full_name)}</strong></td><td class="ltr">${esc(t.username || '—')}</td><td>${status}</td><td>${esc(t.last_sign_in_at ? timeText(t.last_sign_in_at) : 'لم تسجل الدخول بعد')}</td><td>${esc(circles)}</td><td>${actions}</td></tr>`;
+      return `<tr><td><strong>${esc(t.full_name)}</strong></td><td class="ltr">${esc(t.username || '—')}</td><td><span class="badge badge-blue">معلمة</span></td><td>${status}</td><td>${esc(t.last_sign_in_at ? timeText(t.last_sign_in_at) : 'لم تسجل الدخول بعد')}</td><td>${esc(circles)}</td><td>${actions}</td></tr>`;
     }).join('');
-    const warning = state.teacherAdminError ? `<div class="notice warn"><strong>تعذر تحميل بيانات حسابات المعلمات.</strong><br>${esc(state.teacherAdminError)}<br>بقية أقسام الموقع تبقى متاحة. جرّب تحديث القائمة بعد التأكد من نشر وظيفة admin-manage-teachers.</div>` : '';
-    return `<div class="page-head"><div><h2>حسابات المعلمات</h2><p>إدارة أسماء المستخدمين وكلمات المرور وحالة الحساب دون حذف السجلات القديمة.</p></div><div class="row-actions"><button class="btn btn-outline" data-action="refresh-teachers">↻ تحديث القائمة</button><button class="btn btn-primary" data-action="add-teacher">＋ إنشاء حساب أنسة</button></div></div>${warning}<div class="notice">يتم الدخول باسم المستخدم وكلمة المرور. يمكن تعطيل الحساب بدلاً من حذفه للحفاظ على السجلات المرتبطة به.</div><div class="card">${rows?table(['اسم المعلمة','اسم المستخدم','حالة الحساب','آخر تسجيل دخول','الحلقات','الإجراءات'],rows):empty('👩‍🏫','لا توجد معلمات','أنشئ حساب المعلمة الأول من الزر أعلاه.')}</div>`;
+
+    const examinerRows = state.examiners.map(e=>`<tr>
+      <td><strong>${esc(e.full_name)}</strong></td>
+      <td class="ltr">${esc(e.username || '—')}</td>
+      <td><span class="badge badge-orange">مختبرة</span></td>
+      <td>اختبار الطالبات وتسجيل نتائج الاختبارات</td>
+      <td>${dateText(e.created_at ? String(e.created_at).slice(0,10) : '')}</td>
+    </tr>`).join('');
+
+    const manager = state.profile?.role === 'manager'
+      ? `<div class="card"><div class="card-header"><div class="card-title">حساب المدير الحالي</div><span class="badge badge-green">مدير</span></div>
+          <div class="notice">هذا الحساب مسؤول عن إدارة النظام بالكامل، وإدارة الحلقات والحسابات والطلبات والإعدادات.</div>
+          <div class="form-grid"><div class="notice"><strong>الاسم</strong><div>${esc(state.profile.full_name || '—')}</div></div><div class="notice"><strong>اسم المستخدم</strong><div class="ltr">${esc(state.profile.username || '—')}</div></div></div>
+        </div>` : '';
+
+    const teacherWarning = state.teacherAdminError ? `<div class="notice warn"><strong>تعذر تحميل حسابات المعلمات.</strong><br>${esc(state.teacherAdminError)}<br>تحقق من نشر وظيفة admin-manage-teachers.</div>` : '';
+    const examinerWarning = state.examinerAdminError ? `<div class="notice warn"><strong>تعذر تحميل حسابات المختبرات.</strong><br>${esc(state.examinerAdminError)}<br>تحقق من صلاحية المدير لقراءة ملفات profiles.</div>` : '';
+
+    return `<div class="page-head"><div><h2>إدارة الحسابات</h2><p>اعرف صفة كل حساب ومهمته داخل غراس، وأدر حسابات المعلمات من هذه الصفحة.</p></div><div class="row-actions"><button class="btn btn-outline" data-action="refresh-teachers">↻ تحديث القائمة</button><button class="btn btn-primary" data-action="add-teacher">＋ إضافة حساب</button></div></div>
+      ${manager}
+      <div class="notice">عند إضافة حساب جديد اختر نوعه: معلمة عادية أو مختبرة. يحدد نوع الحساب الأقسام والصلاحيات التي تظهر لصاحب الحساب عند تسجيل الدخول.</div>
+      ${teacherWarning}
+      <div class="card"><div class="card-header"><div class="card-title">حسابات المعلمات (${state.teachers.length})</div><span class="badge badge-blue">معلمة</span></div>
+        ${teacherRows?table(['الاسم','اسم المستخدم','الصفة','الحالة','آخر دخول','الحلقات','الإجراءات'],teacherRows):empty('👩‍🏫','لا توجد حسابات معلمات','أضف حساب معلمة من زر «إضافة حساب».')}
+      </div>
+      ${examinerWarning}
+      <div class="card"><div class="card-header"><div class="card-title">حسابات المختبرات (${state.examiners.length})</div><span class="badge badge-orange">مختبرة</span></div>
+        ${examinerRows?table(['الاسم','اسم المستخدم','الصفة','المهمة في البرنامج','تاريخ إنشاء الحساب'],examinerRows):empty('🧪','لا توجد حسابات مختبرات','ستظهر هنا الحسابات التي أُنشئت بصفة مختبرة.')}
+      </div>`;
   }
 
   function editTeacherModal(userId) {
