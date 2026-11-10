@@ -683,12 +683,18 @@
   }
 
   function renderTeachers() {
-    const rows = state.teachers.map(t=>{
+    const managerRow = state.profile?.role === 'manager' ? (() => {
+      const managerStatus = '<span class="badge badge-green">مفعّل</span>';
+      const managerLogin = state.user?.last_sign_in_at ? timeText(state.user.last_sign_in_at) : 'الحساب الحالي';
+      return `<tr><td><strong>${esc(state.profile.full_name || 'المدير')}</strong></td><td class="ltr">${esc(state.profile.username || '—')}</td><td><span class="badge badge-blue">مدير</span></td><td>إدارة البرنامج بالكامل</td><td>${managerStatus}</td><td>${esc(managerLogin)}</td><td>—</td><td><span class="badge badge-gray">الحساب الحالي</span></td></tr>`;
+    })() : '';
+
+    const teacherRows = state.teachers.map(t=>{
       const disabled = teacherIsDisabled(t);
       const status = disabled ? '<span class="badge badge-red">معطّل</span>' : '<span class="badge badge-green">مفعّل</span>';
       const circles = state.halaqat.filter(h=>h.teacher_id===t.user_id).map(h=>h.name).join('، ') || 'لم تعيّن لحلقة';
-      const actions = `<div class="row-actions"><button class="btn btn-outline btn-sm" data-action="edit-teacher" data-id="${esc(t.user_id)}">تعديل الحساب</button><button class="btn btn-outline btn-sm" data-action="teacher-password" data-id="${esc(t.user_id)}">تغيير كلمة المرور</button>${disabled ? `<button class="btn btn-success btn-sm" data-action="enable-teacher" data-id="${esc(t.user_id)}">إعادة تفعيل</button>` : `<button class="btn btn-danger btn-sm" data-action="disable-teacher" data-id="${esc(t.user_id)}">تعطيل الحساب</button>`}</div>`;
-      return `<tr><td><strong>${esc(t.full_name)}</strong></td><td class="ltr">${esc(t.username || '—')}</td><td>${status}</td><td>${esc(t.last_sign_in_at ? timeText(t.last_sign_in_at) : 'لم تسجل الدخول بعد')}</td><td>${esc(circles)}</td><td>${actions}</td></tr>`;
+      const actions = `<div class="row-actions"><button class="btn btn-outline btn-sm" data-action="edit-teacher" data-id="${esc(t.user_id)}">تعديل</button><button class="btn btn-outline btn-sm" data-action="teacher-password" data-id="${esc(t.user_id)}">كلمة مرور جديدة</button>${disabled ? `<button class="btn btn-success btn-sm" data-action="enable-teacher" data-id="${esc(t.user_id)}">إعادة تفعيل</button>` : `<button class="btn btn-danger btn-sm" data-action="disable-teacher" data-id="${esc(t.user_id)}">تعطيل</button>`}</div>`;
+      return `<tr><td><strong>${esc(t.full_name)}</strong></td><td class="ltr">${esc(t.username || '—')}</td><td><span class="badge badge-green">أنسة</span></td><td>تعليم الطالبات وإدارة الحلقة المسندة إليها</td><td>${status}</td><td>${esc(t.last_sign_in_at ? timeText(t.last_sign_in_at) : 'لم تسجل الدخول بعد')}</td><td>${esc(circles)}</td><td>${actions}</td></tr>`;
     }).join('');
 
     const examinerRows = state.examiners.map(e=>`<tr>
@@ -696,20 +702,21 @@
       <td class="ltr">${esc(e.username || '—')}</td>
       <td><span class="badge badge-orange">مختبرة</span></td>
       <td>اختبار الطالبات وتسجيل نتائج الاختبارات</td>
-      <td>${dateText(e.created_at ? String(e.created_at).slice(0,10) : '')}</td>
+      <td><span class="badge badge-green">مفعّل</span></td>
+      <td>—</td>
+      <td>—</td>
+      <td><span class="badge badge-gray">حساب مختبرة</span></td>
     </tr>`).join('');
 
     const warning = state.teacherAdminError ? `<div class="notice warn"><strong>تعذر تحميل بيانات حسابات المعلمات.</strong><br>${esc(state.teacherAdminError)}<br>بقية أقسام الموقع تبقى متاحة. جرّب تحديث القائمة بعد التأكد من نشر وظيفة admin-manage-teachers.</div>` : '';
     const examinerWarning = state.examinerAdminError ? `<div class="notice warn"><strong>تعذر تحميل حسابات المختبرات.</strong><br>${esc(state.examinerAdminError)}</div>` : '';
+    const allRows = [managerRow,teacherRows,examinerRows].filter(Boolean).join('');
 
-    return `<div class="page-head"><div><h2>حسابات المعلمات</h2><p>إدارة أسماء المستخدمين وكلمات المرور وحالة الحساب دون حذف السجلات القديمة.</p></div><div class="row-actions"><button class="btn btn-outline" data-action="refresh-teachers">↻ تحديث القائمة</button><button class="btn btn-primary" data-action="add-teacher">＋ إنشاء حساب معلمة</button></div></div>
+    return `<div class="page-head"><div><h2>حسابات المعلمات</h2><p>إدارة أسماء المستخدمين وكلمات المرور وحالة الحساب دون حذف السجلات القديمة.</p></div><div class="row-actions"><button class="btn btn-outline" data-action="refresh-teachers">↻ تحديث القائمة</button><button class="btn btn-primary" data-action="add-teacher">＋ إنشاء حساب أنسة</button></div></div>
       ${warning}
-      <div class="notice">يتم الدخول باسم المستخدم وكلمة المرور. يمكنك تعديل الاسم الكامل واسم المستخدم، وتعيين كلمة مرور جديدة، أو تعطيل الحساب مع الاحتفاظ بالسجلات المرتبطة به.</div>
-      <div class="card">${rows?table(['اسم المعلمة','اسم المستخدم','حالة الحساب','آخر تسجيل دخول','الحلقات','الإجراءات'],rows):empty('👩‍🏫','لا توجد معلمات','أنشئ حساب المعلمة الأول من الزر أعلاه.')}</div>
+      <div class="notice">يتم الدخول باسم المستخدم وكلمة المرور. يمكن تعطيل الحساب بدلاً من حذفه للحفاظ على السجلات المرتبطة به.</div>
       ${examinerWarning}
-      <div class="card"><div class="card-header"><div class="card-title">حسابات المختبرات (${state.examiners.length})</div><span class="badge badge-orange">مختبرة</span></div>
-        ${examinerRows?table(['اسم المختبرة','اسم المستخدم','الصفة','المهمة','تاريخ إنشاء الحساب'],examinerRows):empty('🧪','لا توجد حسابات مختبرات','ستظهر هنا الحسابات التي أُنشئت بصفة مختبرة.')}
-      </div>`;
+      <div class="card">${allRows?table(['اسم المعلمة','اسم المستخدم','الصفة','المهمة في البرنامج','حالة الحساب','آخر تسجيل دخول','الحلقات','الإجراءات'],allRows):empty('👩‍🏫','لا توجد حسابات','أنشئ حساب أنسة من الزر أعلاه.')}</div>`;
   }
 
   function editTeacherModal(userId) {
