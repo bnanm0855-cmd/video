@@ -257,7 +257,7 @@
 
   const state = {
     user: null, profile: null, role: null, tab: 'dashboard',
-    teachers: [], teacherAdminError: '', halaqat: [], students: [], allStudents: [], departedStudents: [], studentNotes: [], attendance: [], recitations: [], historyAttendance: [], historyRecitations: [], admissions: [], notifications: [], notificationChannel: null,
+    teachers: [], teacherAdminError: '', examinerRecords: [], halaqat: [], students: [], allStudents: [], departedStudents: [], studentNotes: [], attendance: [], recitations: [], historyAttendance: [], historyRecitations: [], admissions: [], notifications: [], notificationChannel: null,
     busy: false,
     branding: {name:'نور الحلقات', iconType:'emoji', iconValue:'📖'},
     brandingDraft: null,
@@ -400,14 +400,13 @@
   function showApp() { $('loginScreen').classList.add('hidden'); $('appShell').classList.remove('hidden'); }
 
   async function loadProfile() {
-    const { data, error } = await supabaseClient.from('profiles')
-      .select('user_id,full_name,role,username').eq('user_id', state.user.id).single();
+    const { data, error } = await supabaseClient.from('profiles').select('user_id,full_name,role,username').eq('user_id', state.user.id).single();
     if (error) throw error;
-    if (!data || !['manager','teacher'].includes(data.role)) { await supabaseClient.auth.signOut(); state.user=null; throw new Error('هذا الحساب غير مفعّل كمدير أو معلمة في النظام.'); }
-    state.profile = data; state.role = data.role;
-    $('sideUserName').textContent = data.full_name || state.user.email;
-    $('sideUserRole').textContent = data.role === 'manager' ? 'المدير العام' : 'المعلمة';
-    $('sideAvatar').textContent = (data.full_name || 'ن').trim().charAt(0);
+    if (!data || !['manager','teacher','examiner'].includes(data.role)) { await supabaseClient.auth.signOut(); state.user=null; throw new Error('هذا الحساب غير مفعّل في نظام غراس.'); }
+    state.profile=data; state.role=data.role;
+    $('sideUserName').textContent=data.full_name || state.user.email;
+    $('sideUserRole').textContent=data.role==='manager'?'المدير العام':data.role==='examiner'?'المختبرة':'المعلمة';
+    $('sideAvatar').textContent=(data.full_name || 'ن').trim().charAt(0);
   }
 
   async function claimInitialManagerUsername(session) {
@@ -448,65 +447,42 @@
 
   async function loadData() {
     if (!state.user || !state.profile) return;
-    const manager = state.role === 'manager';
-    const { data: halaqat, error: halaqaError } = await (manager
-      ? supabaseClient.from('halaqat').select('*').order('created_at', {ascending:false})
-      : supabaseClient.from('halaqat').select('*').eq('teacher_id', state.user.id).order('created_at', {ascending:false}));
-    if (halaqaError) throw halaqaError;
-    state.halaqat = halaqat || [];
-    const halaqaIds = state.halaqat.map(h => h.id);
-
-    let studentQuery = supabaseClient.from('students').select('*').order('created_at', {ascending:false});
-    if (!manager) studentQuery = halaqaIds.length ? studentQuery.in('halaqa_id', halaqaIds) : null;
-    const studentResult = studentQuery ? await studentQuery : {data:[],error:null};
-    if (studentResult.error) throw studentResult.error;
-    state.allStudents = studentResult.data || [];
-    state.students = state.allStudents.filter(s => s.is_departed !== true);
-    state.departedStudents = state.allStudents.filter(s => s.is_departed === true);
-
-    const {data: studentNotes, error: studentNotesError} = await supabaseClient.from('student_notes')
-      .select('*').order('created_at', {ascending:false});
-    if (studentNotesError) throw studentNotesError;
-    state.studentNotes = studentNotes || [];
-
-    if (manager) {
-      // البريد وحالة حساب Auth وآخر دخول لا تأتي من profiles؛ تجلبها الوظيفة الإدارية الآمنة.
-      try { await reloadTeachers(); }
-      catch (e) { state.teachers = []; state.teacherAdminError = errorMessage(e); }
-    } else { state.teachers = []; state.teacherAdminError = ''; }
-
-    const monthStart = `${today().slice(0,7)}-01`;
-    const {data: attendance, error: attendanceError} = await supabaseClient.from('attendance')
-      .select('*').gte('attendance_date', monthStart).lte('attendance_date', today()).order('attendance_date', {ascending:false});
-    if (attendanceError) throw attendanceError;
-    state.attendance = attendance || [];
-
-    const {data: recitations, error: recitationError} = await supabaseClient.from('recitations')
-      .select('*').gte('recitation_date', monthStart).order('recitation_date', {ascending:false}).limit(500);
-    if (recitationError) throw recitationError;
-    state.recitations = recitations || [];
-
-    // سجل تاريخي كامل يُستخدم في الملف الشخصي، دون التأثير على إحصاءات الشهر الحالي.
-    const {data: historyAttendance, error: historyAttendanceError} = await supabaseClient.from('attendance')
-      .select('*').order('attendance_date', {ascending:false});
-    if (historyAttendanceError) throw historyAttendanceError;
-    state.historyAttendance = historyAttendance || [];
-
-    const {data: historyRecitations, error: historyRecitationsError} = await supabaseClient.from('recitations')
-      .select('*').order('recitation_date', {ascending:false});
-    if (historyRecitationsError) throw historyRecitationsError;
-    state.historyRecitations = historyRecitations || [];
-
-    const {data: admissions, error: admissionError} = await supabaseClient.from('admission_requests')
-      .select('*').order('created_at', {ascending:false});
-    if (admissionError) throw admissionError;
-    state.admissions = admissions || [];
-
-    const {data: notifications, error: notificationError} = await supabaseClient.from('notifications')
-      .select('*').order('created_at', {ascending:false}).limit(30);
-    if (notificationError) throw notificationError;
-    state.notifications = notifications || [];
-    updateNotificationCount();
+    if (state.role === 'examiner') {
+      const {data: admissions, error: admissionError}=await supabaseClient.from('admission_requests').select('*').order('created_at',{ascending:false});
+      if(admissionError) throw admissionError;
+      state.admissions=admissions || [];
+      const {data: records,error:recordsError}=await supabaseClient.from('examiner_test_records').select('*').eq('examiner_id',state.user.id).order('created_at',{ascending:false});
+      if(recordsError) throw recordsError;
+      state.examinerRecords=records || [];
+      state.teachers=[];state.halaqat=[];state.students=[];state.allStudents=[];state.departedStudents=[];state.studentNotes=[];
+      state.attendance=[];state.recitations=[];state.historyAttendance=[];state.historyRecitations=[];state.notifications=[];
+      updateNotificationCount(); return;
+    }
+    const manager=state.role==='manager';
+    const {data:halaqat,error:halaqaError}=await (manager?supabaseClient.from('halaqat').select('*').order('created_at',{ascending:false}):supabaseClient.from('halaqat').select('*').eq('teacher_id',state.user.id).order('created_at',{ascending:false}));
+    if(halaqaError)throw halaqaError; state.halaqat=halaqat||[];
+    const halaqaIds=state.halaqat.map(h=>h.id);
+    let studentQuery=supabaseClient.from('students').select('*').order('created_at',{ascending:false});
+    if(!manager)studentQuery=halaqaIds.length?studentQuery.in('halaqa_id',halaqaIds):null;
+    const studentResult=studentQuery?await studentQuery:{data:[],error:null};
+    if(studentResult.error)throw studentResult.error;
+    state.allStudents=studentResult.data||[];state.students=state.allStudents.filter(s=>s.is_departed!==true);state.departedStudents=state.allStudents.filter(s=>s.is_departed===true);
+    const {data:studentNotes,error:studentNotesError}=await supabaseClient.from('student_notes').select('*').order('created_at',{ascending:false});
+    if(studentNotesError)throw studentNotesError;state.studentNotes=studentNotes||[];
+    if(manager){try{await reloadTeachers();}catch(e){state.teachers=[];state.teacherAdminError=errorMessage(e);}}else{state.teachers=[];state.teacherAdminError='';}
+    const monthStart=`${today().slice(0,7)}-01`;
+    const {data:attendance,error:attendanceError}=await supabaseClient.from('attendance').select('*').gte('attendance_date',monthStart).lte('attendance_date',today()).order('attendance_date',{ascending:false});
+    if(attendanceError)throw attendanceError;state.attendance=attendance||[];
+    const {data:recitations,error:recitationError}=await supabaseClient.from('recitations').select('*').gte('recitation_date',monthStart).order('recitation_date',{ascending:false}).limit(500);
+    if(recitationError)throw recitationError;state.recitations=recitations||[];
+    const {data:historyAttendance,error:historyAttendanceError}=await supabaseClient.from('attendance').select('*').order('attendance_date',{ascending:false});
+    if(historyAttendanceError)throw historyAttendanceError;state.historyAttendance=historyAttendance||[];
+    const {data:historyRecitations,error:historyRecitationsError}=await supabaseClient.from('recitations').select('*').order('recitation_date',{ascending:false});
+    if(historyRecitationsError)throw historyRecitationsError;state.historyRecitations=historyRecitations||[];
+    const {data:admissions,error:admissionError}=await supabaseClient.from('admission_requests').select('*').order('created_at',{ascending:false});
+    if(admissionError)throw admissionError;state.admissions=admissions||[];
+    const {data:notifications,error:notificationError}=await supabaseClient.from('notifications').select('*').order('created_at',{ascending:false}).limit(30);
+    if(notificationError)throw notificationError;state.notifications=notifications||[];updateNotificationCount();
   }
 
   function updateNotificationCount() {
@@ -516,15 +492,17 @@
   }
 
   function navItems() {
-    return state.role === 'manager' ? [
-      ['dashboard','📊','لوحة التحكم'], ['halaqat','🏫','إدارة الحلقات'], ['teachers','👩‍🏫','إدارة المعلمات'],
-      ['students','👩‍🎓','سجل الطالبات'], ['departed','📦','المغادرات'], ['admissions','📝','طلبات التسجيل والقبول'], ['attendance','📋','الحضور اليومي'],
-      ['recitations','📖','التسميع والمراجعة'], ['reports','📈','التقارير'], ['settings','⚙️','إعدادات البرنامج']
-    ] : [
-      ['dashboard','🏠','الرئيسية'], ['my_students','👩‍🎓','طالباتي'], ['departed','📦','المغادرات'], ['attendance','📋','الحضور'],
-      ['recitations','📖','التسميع'], ['admissions','📝','طلبات التسجيل والاختبار']
+    if(state.role==='examiner')return [['examiner','🧪','اختبار الطالبات']];
+    return state.role==='manager'?[
+      ['dashboard','📊','لوحة التحكم'],['halaqat','🏫','إدارة الحلقات'],['teachers','👩‍🏫','إدارة المعلمات'],
+      ['students','👩‍🎓','سجل الطالبات'],['departed','📦','المغادرات'],['admissions','📝','طلبات التسجيل والقبول'],['attendance','📋','الحضور اليومي'],
+      ['recitations','📖','التسميع والمراجعة'],['reports','📈','التقارير'],['settings','⚙️','إعدادات البرنامج']
+    ]:[
+      ['dashboard','🏠','الرئيسية'],['my_students','👩‍🎓','طالباتي'],['departed','📦','المغادرات'],['attendance','📋','الحضور'],
+      ['recitations','📖','التسميع'],['admissions','📝','طلبات التسجيل والاختبار']
     ];
   }
+
   function iconSvg(name) {
     const paths = {
       dashboard:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/>',
@@ -564,22 +542,24 @@
   }
   function setTab(tab) { state.tab = tab; renderNav(); renderPage(); }
   function pageMeta() {
-    const map = {
-      dashboard:['لوحة التحكم','ملخص حالة الحلقات والنشاط اليومي'], halaqat:['إدارة الحلقات','إنشاء الحلقات وتعيين المعلمات'], teachers:['إدارة المعلمات','إنشاء حسابات دخول للمعلمات'],
-      students:['سجل الطالبات','الطالبات المسجلات في الحلقات'], my_students:['طالباتي','بيانات طالبات الحلقات المسندة إليك'], departed:['المغادرات','الطالبات المنقولات إلى سجل المغادرات مع الاحتفاظ بكامل بياناتهن'], admissions:['طلبات التسجيل والقبول','تسجيل الطالبات الجديدات وإدارة الاختبارات'],
-      attendance:['الحضور اليومي','تسجيل ومراجعة حضور الطالبات'], recitations:['التسميع والمراجعة','تسجيل الحفظ الجديد والمراجعة والتثبيت'], reports:['التقارير','ملخصات الحضور والتسميع والتسجيل'], settings:['إعدادات البرنامج','تخصيص اسم البرنامج وأيقونته']
-    };
-    return map[state.tab] || map.dashboard;
+    const map={dashboard:['لوحة التحكم','ملخص حالة الحلقات والنشاط اليومي'],halaqat:['إدارة الحلقات','إنشاء الحلقات وتعيين المعلمات'],teachers:['إدارة المعلمات','إنشاء حسابات دخول للمعلمات'],
+      students:['سجل الطالبات','الطالبات المسجلات في الحلقات'],my_students:['طالباتي','بيانات طالبات الحلقات المسندة إليك'],departed:['المغادرات','الطالبات المنقولات إلى سجل المغادرات مع الاحتفاظ بكامل بياناتهن'],admissions:['طلبات التسجيل والقبول','تسجيل الطالبات الجديدات وإدارة الاختبارات'],
+      examiner:['اختبار الطالبات','الطلبات المسندة إليك وتسجيل نتائج الاختبارات'],attendance:['الحضور اليومي','تسجيل ومراجعة حضور الطالبات'],recitations:['التسميع والمراجعة','تسجيل الحفظ الجديد والمراجعة والتثبيت'],reports:['التقارير','ملخصات الحضور والتسميع والتسجيل'],settings:['إعدادات البرنامج','تخصيص اسم البرنامج وأيقونته']};
+    return map[state.tab]||map.dashboard;
   }
+
   function renderPage() {
-    const [title,subtitle] = pageMeta(); $('pageTitle').textContent = title; $('pageSubtitle').textContent = subtitle;
-    const root = $('mainContent'); root.innerHTML = '<div class="loading"><div class="spinner"></div>جارٍ تجهيز الصفحة...</div>';
-    try {
-      const renderers = {dashboard:renderDashboard,halaqat:renderHalaqat,teachers:renderTeachers,students:renderStudents,my_students:renderStudents,departed:renderDeparted,admissions:renderAdmissions,attendance:renderAttendance,recitations:renderRecitations,reports:renderReports,settings:renderSettings};
-      if ((state.tab==='teachers'||state.tab==='halaqat'||state.tab==='reports'||state.tab==='students'||state.tab==='settings') && state.role!=='manager') throw new Error('هذه الصفحة متاحة للمدير فقط.');
-      root.innerHTML = (renderers[state.tab] || renderDashboard)();
-    } catch (e) { root.innerHTML = `<div class="card"><div class="notice warn">${esc(errorMessage(e))}</div></div>`; }
+    const [title,subtitle]=pageMeta();$('pageTitle').textContent=title;$('pageSubtitle').textContent=subtitle;
+    const root=$('mainContent');root.innerHTML='<div class="loading"><div class="spinner"></div>جارٍ تجهيز الصفحة...</div>';
+    try{
+      const renderers={dashboard:renderDashboard,halaqat:renderHalaqat,teachers:renderTeachers,students:renderStudents,my_students:renderStudents,departed:renderDeparted,admissions:renderAdmissions,examiner:renderExaminer,attendance:renderAttendance,recitations:renderRecitations,reports:renderReports,settings:renderSettings};
+      if(state.role==='examiner'&&state.tab!=='examiner')throw new Error('هذا القسم مخصص للمختبرة فقط.');
+      if((state.tab==='teachers'||state.tab==='halaqat'||state.tab==='reports'||state.tab==='students'||state.tab==='settings')&&state.role!=='manager')throw new Error('هذه الصفحة متاحة للمدير فقط.');
+      root.innerHTML=(renderers[state.tab]||(state.role==='examiner'?renderExaminer:renderDashboard))();
+    }catch(e){root.innerHTML=`<div class="card"><div class="notice warn">${esc(errorMessage(e))}</div></div>`;}
   }
+
+  
 
   const halaqaName = (id) => state.halaqat.find(h => h.id === id)?.name || 'حلقة غير معروفة';
   const studentName = (id) => state.allStudents.find(s => s.id === id)?.full_name || state.students.find(s => s.id === id)?.full_name || 'طالبة غير معروفة';
@@ -806,6 +786,47 @@
     if (!digits) return '';
     return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
   }
+  function renderExaminer() {
+    const byRequest=new Map();
+    state.examinerRecords.forEach(r=>{if(!byRequest.has(r.request_id))byRequest.set(r.request_id,[]);byRequest.get(r.request_id).push(r);});
+    const rows=state.admissions.map(a=>{
+      const history=byRequest.get(a.id)||[],last=history[0];
+      const parts=a.exam_part_mode==='عدة أجزاء'?`الأجزاء من ${a.exam_part_start??'—'} إلى ${a.exam_part_end??'—'}`:a.exam_part_mode==='جزء واحد'?`الجزء ${a.exam_part_start??'—'}`:'لم يحدد نطاق الاختبار';
+      return `<tr><td><strong>${esc(a.full_name)}</strong><div class="small muted">الهاتف: ${esc(a.phone||a.guardian_phone||'—')}</div><div class="small muted">${esc(a.previous_level||'')}</div></td><td>${esc(parts)}</td><td>${statusBadge(a.examiner_status||'بانتظار المراجعة')}</td><td>${last?`<strong>${esc(last.decision)}</strong><div class="small muted">${esc(last.result||'لا توجد تفاصيل')}</div>`:'<span class="muted">لم تسجل نتيجة</span>'}</td><td><button class="btn btn-primary btn-sm" data-action="examiner-test" data-id="${esc(a.id)}">تسجيل نتيجة الاختبار</button></td></tr>`;
+    }).join('');
+    return `<div class="page-head"><div><h2>طلبات الاختبار المسندة إليك</h2><p>راجعي بيانات الطالبة وسجّلي قرار الاختبار ونتيجته.</p></div><button class="btn btn-outline" data-action="refresh">↻ تحديث</button></div>
+      <div class="notice">تظهر هنا الطلبات المسندة إلى حسابك فقط. تُحفظ كل نتيجة كسجل مستقل، وتبقى الموافقة النهائية على قبول الطالبة لدى الإدارة.</div>
+      <div class="card">${rows?table(['الطالبة وبيانات التواصل','نطاق الاختبار','حالة التكليف','آخر نتيجة','الإجراء'],rows):empty('🧪','لا توجد طلبات مسندة إليك','عندما تسند الإدارة إليك طلب اختبار سيظهر هنا.')}</div>`;
+  }
+
+  function examinerTestModal(requestId) {
+    const request=state.admissions.find(a=>a.id===requestId);
+    if(!request){notify('لم يتم العثور على طلب الاختبار. حدّث القائمة وحاول مجدداً.','error');return;}
+    const history=state.examinerRecords.filter(r=>r.request_id===requestId).map(r=>`<div class="notice" style="margin-bottom:8px"><strong>${esc(r.decision)}</strong><div class="small muted">${dateText(String(r.created_at||'').slice(0,10))} — ${esc(r.result||'بدون نتيجة')}</div><div>${esc(r.notes||'')}</div></div>`).join('');
+    const parts=request.exam_part_mode==='عدة أجزاء'?`من الجزء ${request.exam_part_start??'—'} إلى الجزء ${request.exam_part_end??'—'}`:request.exam_part_mode==='جزء واحد'?`الجزء ${request.exam_part_start??'—'}`:'غير محدد';
+    openModal(`اختبار الطالبة: ${request.full_name}`,`<div class="notice"><strong>نطاق الاختبار:</strong> ${esc(parts)}<br><strong>المستوى السابق:</strong> ${esc(request.previous_level||'غير محدد')}</div>
+      ${history?`<div class="card"><h3>سجل الاختبارات السابق</h3>${history}</div>`:''}
+      <form id="examinerTestForm">
+        <div class="input-group"><label>قرار الاختبار</label><select class="input-control" name="decision" required><option value="مكتمل">اكتمل الاختبار</option><option value="مقبول">مقبول</option><option value="مرفوض">مرفوض</option><option value="ملغي">ملغي</option></select></div>
+        <div class="input-group"><label>سبب الرفض (عند اختيار مرفوض)</label><textarea class="input-control" name="rejection_reason" rows="2" maxlength="1000" placeholder="وضحي سبب عدم القبول"></textarea></div>
+        <div class="input-group"><label>موعد الاختبار (اختياري)</label><input class="input-control" type="datetime-local" name="scheduled_at"></div>
+        <div class="input-group"><label>نتيجة الاختبار</label><textarea class="input-control" name="result" rows="3" maxlength="2000" placeholder="تفاصيل الحفظ والتلاوة والأجزاء التي أتقنتها"></textarea></div>
+        <div class="input-group"><label>ملاحظات المختبرة</label><textarea class="input-control" name="notes" rows="3" maxlength="2000" placeholder="ملاحظات إضافية للإدارة"></textarea></div>
+      </form>`,async()=>{
+        const form=$('examinerTestForm');if(!form.reportValidity())return;
+        const decision=formValue(form,'decision'),reason=formValue(form,'rejection_reason');
+        if(decision==='مرفوض'&&!reason){notify('اكتبي سبب الرفض قبل الحفظ.','error');return;}
+        const button=$('modalSaveButton');setBusy(button,true,'جارٍ حفظ نتيجة الاختبار...');
+        try{
+          const scheduled=formValue(form,'scheduled_at');
+          const payload={request_id:request.id,examiner_id:state.user.id,decision,rejection_reason:reason||null,scheduled_at:scheduled?new Date(scheduled).toISOString():null,result:formValue(form,'result')||null,notes:formValue(form,'notes')||null};
+          const {error}=await supabaseClient.from('examiner_test_records').insert(payload);if(error)throw error;
+          closeModal();await refreshData(false);setTab('examiner');notify('تم حفظ نتيجة الاختبار في سجل المختبرة، وهي متاحة للإدارة للمراجعة.');
+        }catch(error){notify(errorMessage(error),'error');}
+        finally{setBusy(button,false);}
+      },'حفظ نتيجة الاختبار');
+  }
+
   function renderAdmissions() {
     const rows = state.admissions.map(a=>{
       const phone = a.phone || a.guardian_phone || '';
@@ -1057,6 +1078,7 @@
       case 'add-student-note': addStudentNoteModal(id);break;
       case 'depart-student': departStudentModal(id);break;
       case 'add-admission': addAdmissionModal();break;
+      case 'examiner-test': if(state.role==='examiner') examinerTestModal(id); else notify('هذه العملية مخصصة للمختبرة.','error'); break;
       case 'delete-halaqa':
         if(confirm('هل تريد حذف هذه الحلقة؟ لن يسمح النظام بالحذف إذا كانت مرتبطة بطالبات.')){try{const {error}=await supabaseClient.from('halaqat').delete().eq('id',id);if(error)throw error;await refreshData();notify('تم حذف الحلقة.');}catch(e){notify(errorMessage(e),'error');}}break;
       case 'approve-admission': if(state.role==='manager')approveAdmissionModal(id);else notify('اعتماد الطلب متاح للمدير فقط.','error');break;
