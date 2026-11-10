@@ -683,12 +683,12 @@
   }
 
   function renderTeachers() {
-    const teacherRows = state.teachers.map(t=>{
+    const rows = state.teachers.map(t=>{
       const disabled = teacherIsDisabled(t);
       const status = disabled ? '<span class="badge badge-red">معطّل</span>' : '<span class="badge badge-green">مفعّل</span>';
       const circles = state.halaqat.filter(h=>h.teacher_id===t.user_id).map(h=>h.name).join('، ') || 'لم تعيّن لحلقة';
-      const actions = `<div class="row-actions"><button class="btn btn-outline btn-sm" data-action="edit-teacher" data-id="${esc(t.user_id)}">تعديل</button><button class="btn btn-outline btn-sm" data-action="teacher-password" data-id="${esc(t.user_id)}">كلمة مرور جديدة</button>${disabled ? `<button class="btn btn-success btn-sm" data-action="enable-teacher" data-id="${esc(t.user_id)}">إعادة تفعيل</button>` : `<button class="btn btn-danger btn-sm" data-action="disable-teacher" data-id="${esc(t.user_id)}">تعطيل</button>`}</div>`;
-      return `<tr><td><strong>${esc(t.full_name)}</strong></td><td class="ltr">${esc(t.username || '—')}</td><td><span class="badge badge-blue">معلمة</span></td><td>${status}</td><td>${esc(t.last_sign_in_at ? timeText(t.last_sign_in_at) : 'لم تسجل الدخول بعد')}</td><td>${esc(circles)}</td><td>${actions}</td></tr>`;
+      const actions = `<div class="row-actions"><button class="btn btn-outline btn-sm" data-action="edit-teacher" data-id="${esc(t.user_id)}">تعديل الحساب</button><button class="btn btn-outline btn-sm" data-action="teacher-password" data-id="${esc(t.user_id)}">تغيير كلمة المرور</button>${disabled ? `<button class="btn btn-success btn-sm" data-action="enable-teacher" data-id="${esc(t.user_id)}">إعادة تفعيل</button>` : `<button class="btn btn-danger btn-sm" data-action="disable-teacher" data-id="${esc(t.user_id)}">تعطيل الحساب</button>`}</div>`;
+      return `<tr><td><strong>${esc(t.full_name)}</strong></td><td class="ltr">${esc(t.username || '—')}</td><td>${status}</td><td>${esc(t.last_sign_in_at ? timeText(t.last_sign_in_at) : 'لم تسجل الدخول بعد')}</td><td>${esc(circles)}</td><td>${actions}</td></tr>`;
     }).join('');
 
     const examinerRows = state.examiners.map(e=>`<tr>
@@ -699,25 +699,16 @@
       <td>${dateText(e.created_at ? String(e.created_at).slice(0,10) : '')}</td>
     </tr>`).join('');
 
-    const manager = state.profile?.role === 'manager'
-      ? `<div class="card"><div class="card-header"><div class="card-title">حساب المدير الحالي</div><span class="badge badge-green">مدير</span></div>
-          <div class="notice">هذا الحساب مسؤول عن إدارة النظام بالكامل، وإدارة الحلقات والحسابات والطلبات والإعدادات.</div>
-          <div class="form-grid"><div class="notice"><strong>الاسم</strong><div>${esc(state.profile.full_name || '—')}</div></div><div class="notice"><strong>اسم المستخدم</strong><div class="ltr">${esc(state.profile.username || '—')}</div></div></div>
-        </div>` : '';
+    const warning = state.teacherAdminError ? `<div class="notice warn"><strong>تعذر تحميل بيانات حسابات المعلمات.</strong><br>${esc(state.teacherAdminError)}<br>بقية أقسام الموقع تبقى متاحة. جرّب تحديث القائمة بعد التأكد من نشر وظيفة admin-manage-teachers.</div>` : '';
+    const examinerWarning = state.examinerAdminError ? `<div class="notice warn"><strong>تعذر تحميل حسابات المختبرات.</strong><br>${esc(state.examinerAdminError)}</div>` : '';
 
-    const teacherWarning = state.teacherAdminError ? `<div class="notice warn"><strong>تعذر تحميل حسابات المعلمات.</strong><br>${esc(state.teacherAdminError)}<br>تحقق من نشر وظيفة admin-manage-teachers.</div>` : '';
-    const examinerWarning = state.examinerAdminError ? `<div class="notice warn"><strong>تعذر تحميل حسابات المختبرات.</strong><br>${esc(state.examinerAdminError)}<br>تحقق من صلاحية المدير لقراءة ملفات profiles.</div>` : '';
-
-    return `<div class="page-head"><div><h2>إدارة الحسابات</h2><p>اعرف صفة كل حساب ومهمته داخل غراس، وأدر حسابات المعلمات من هذه الصفحة.</p></div><div class="row-actions"><button class="btn btn-outline" data-action="refresh-teachers">↻ تحديث القائمة</button><button class="btn btn-primary" data-action="add-teacher">＋ إضافة حساب</button></div></div>
-      ${manager}
-      <div class="notice">عند إضافة حساب جديد اختر نوعه: معلمة عادية أو مختبرة. يحدد نوع الحساب الأقسام والصلاحيات التي تظهر لصاحب الحساب عند تسجيل الدخول.</div>
-      ${teacherWarning}
-      <div class="card"><div class="card-header"><div class="card-title">حسابات المعلمات (${state.teachers.length})</div><span class="badge badge-blue">معلمة</span></div>
-        ${teacherRows?table(['الاسم','اسم المستخدم','الصفة','الحالة','آخر دخول','الحلقات','الإجراءات'],teacherRows):empty('👩‍🏫','لا توجد حسابات معلمات','أضف حساب معلمة من زر «إضافة حساب».')}
-      </div>
+    return `<div class="page-head"><div><h2>حسابات المعلمات</h2><p>إدارة أسماء المستخدمين وكلمات المرور وحالة الحساب دون حذف السجلات القديمة.</p></div><div class="row-actions"><button class="btn btn-outline" data-action="refresh-teachers">↻ تحديث القائمة</button><button class="btn btn-primary" data-action="add-teacher">＋ إنشاء حساب معلمة</button></div></div>
+      ${warning}
+      <div class="notice">يتم الدخول باسم المستخدم وكلمة المرور. يمكنك تعديل الاسم الكامل واسم المستخدم، وتعيين كلمة مرور جديدة، أو تعطيل الحساب مع الاحتفاظ بالسجلات المرتبطة به.</div>
+      <div class="card">${rows?table(['اسم المعلمة','اسم المستخدم','حالة الحساب','آخر تسجيل دخول','الحلقات','الإجراءات'],rows):empty('👩‍🏫','لا توجد معلمات','أنشئ حساب المعلمة الأول من الزر أعلاه.')}</div>
       ${examinerWarning}
       <div class="card"><div class="card-header"><div class="card-title">حسابات المختبرات (${state.examiners.length})</div><span class="badge badge-orange">مختبرة</span></div>
-        ${examinerRows?table(['الاسم','اسم المستخدم','الصفة','المهمة في البرنامج','تاريخ إنشاء الحساب'],examinerRows):empty('🧪','لا توجد حسابات مختبرات','ستظهر هنا الحسابات التي أُنشئت بصفة مختبرة.')}
+        ${examinerRows?table(['اسم المختبرة','اسم المستخدم','الصفة','المهمة','تاريخ إنشاء الحساب'],examinerRows):empty('🧪','لا توجد حسابات مختبرات','ستظهر هنا الحسابات التي أُنشئت بصفة مختبرة.')}
       </div>`;
   }
 
