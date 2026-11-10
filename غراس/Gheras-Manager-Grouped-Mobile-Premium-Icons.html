@@ -1005,7 +1005,7 @@
       recoveryMode=false;
       await supabaseClient.auth.signOut();
       showLogin('تم تغيير كلمة المرور بنجاح. سجّل الدخول الآن باستخدام كلمة المرور الجديدة.');
-      $('loginEmail').focus();
+      $('loginUsername').focus();
     }catch(e){errorBox.textContent=errorMessage(e);errorBox.classList.remove('hidden');}
     finally{setBusy(button,false);}
   }
